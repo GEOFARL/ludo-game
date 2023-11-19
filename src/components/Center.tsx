@@ -1,29 +1,13 @@
-import { Color, ColorShade } from '../types';
-import { getColor } from '../utils';
-
 interface CenterProps {
   width: number;
 }
 
 const Center: React.FC<CenterProps> = ({ width }) => {
-  console.log(width);
   return (
     <div
-      className={`row-start-7 row-span-3 col-start-7 col-span-3 bg-transparent h-0 w-0 border-l-${getColor(
-        Color.GREEN,
-        ColorShade.NORMAL
-      )} border-r-${getColor(
-        Color.BLUE,
-        ColorShade.NORMAL
-      )} border-t-${getColor(
-        Color.YELLOW,
-        ColorShade.NORMAL
-      )} border-b-${getColor(Color.RED, ColorShade.NORMAL)}`}
+      className={`row-start-7 row-span-3 col-start-7 col-span-3 bg-transparent h-0 w-0 border-l-green-600 border-r-blue-600 border-t-yellow-400 border-b-red-500 `}
       style={{
-        borderLeftWidth: width / 2,
-        borderRightWidth: width / 2,
-        borderTopWidth: width / 2,
-        borderBottomWidth: width / 2,
+        borderWidth: width / 2,
       }}
     ></div>
   );

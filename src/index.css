@@ -1,3 +1,59 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    @apply bg-red-500;
+  }
+  50% {
+    @apply bg-red-800;
+  }
+}
+
+.pulse-red {
+  animation: pulse-red 0.6s linear infinite;
+}
+
+@keyframes pulse-green {
+  0%,
+  100% {
+    @apply bg-green-600;
+  }
+  50% {
+    @apply bg-green-800;
+  }
+}
+
+.pulse-green {
+  animation: pulse-green 0.6s linear infinite;
+}
+
+@keyframes pulse-yellow {
+  0%,
+  100% {
+    @apply bg-yellow-400;
+  }
+  50% {
+    @apply bg-yellow-600;
+  }
+}
+
+.pulse-yellow {
+  animation: pulse-yellow 0.6s linear infinite;
+}
+
+@keyframes pulse-blue {
+  0%,
+  100% {
+    @apply bg-blue-600;
+  }
+  50% {
+    @apply bg-blue-900;
+  }
+}
+
+.pulse-blue {
+  animation: pulse-blue 0.6s linear infinite;
+}

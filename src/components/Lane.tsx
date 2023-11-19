@@ -1,11 +1,10 @@
-import { Color } from '../types';
 import Cell from './Cell';
 
 type Position = 'top' | 'left' | 'right' | 'bottom';
 
 interface LaneProps {
   position: Position;
-  color: Color;
+  color: string;
 }
 
 const findBorder = (row: number, col: number, position: Position): string => {
@@ -119,11 +118,7 @@ const Lane: React.FC<LaneProps> = ({ position, color }) => {
           );
         }
         return (
-          <Cell
-            color={Color.WHITE}
-            key={`${rowIdx}${colIdx}`}
-            classes={border}
-          />
+          <Cell color={'white'} key={`${rowIdx}${colIdx}`} classes={border} />
         );
       });
     });
