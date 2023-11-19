@@ -8,7 +8,7 @@ const GameBoard = () => {
   const { ref, width } = useWidth();
   return (
     <div
-      className="w-[800px] h-[800px] mx-auto mt-3 grid grid-cols-[repeat(15,_minmax(0,_1fr))] grid-rows-[repeat(15,_minmax(0,_1fr))] border-2 border-black"
+      className="w-[900px] h-[900px] mx-auto mt-3 grid grid-cols-[repeat(15,_minmax(0,_1fr))] grid-rows-[repeat(15,_minmax(0,_1fr))] border-2 border-black"
       ref={ref}
     >
       <PlayerBase color={Color.RED} horizontal="left" vertical="bottom" />

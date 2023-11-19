@@ -1,5 +1,6 @@
 import { Color, ColorShade } from '../types';
 import { getColor } from '../utils';
+import PlayerBaseSpawn from './PlayerBaseSpawn';
 
 interface PlayerBaseProps {
   vertical: 'top' | 'bottom';
@@ -32,9 +33,9 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
 
   return (
     <div
-      className={`${verticalClasses} ${horizontalClasses} ${colorClass} ${borderClasses} border-black`}
+      className={`${verticalClasses} ${horizontalClasses} ${colorClass} ${borderClasses} border-black grid grid-cols-6 grid-rows-6`}
     >
-      PlayerBase
+      <PlayerBaseSpawn color={color} />
     </div>
   );
 };
