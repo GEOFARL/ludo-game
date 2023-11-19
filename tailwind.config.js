@@ -2,7 +2,17 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'bebas': ['Bebas Neue', 'sans-serif'],
+      },
+      gridColumnStart: {
+        '10': '10',
+      },
+      gridRowStart: {
+        '10': '10',
+      },
+    },
   },
   plugins: [],
 };
