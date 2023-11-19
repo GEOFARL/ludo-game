@@ -3,6 +3,7 @@ export enum Color {
   GREEN,
   YELLOW,
   BLUE,
+  WHITE,
 }
 
 export enum ColorShade {

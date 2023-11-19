@@ -58,5 +58,8 @@ export function getColor(color: Color, shade: ColorShade) {
       }
       break;
     }
+    case Color.WHITE: {
+      return 'white';
+    }
   }
 }

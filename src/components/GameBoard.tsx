@@ -1,6 +1,7 @@
 import useWidth from '../hooks/useWidth';
 import { Color } from '../types';
 import Center from './Center';
+import Lane from './Lane';
 import PlayerBase from './PlayerBase';
 
 const GameBoard = () => {
@@ -14,7 +15,11 @@ const GameBoard = () => {
       <PlayerBase color={Color.GREEN} horizontal="left" vertical="top" />
       <PlayerBase color={Color.YELLOW} horizontal="right" vertical="top" />
       <PlayerBase color={Color.BLUE} horizontal="right" vertical="bottom" />
-      <Center width={Math.round((width / 5) * 100) / 100} />
+      <Center width={width / 5} />
+      <Lane position="top" color={Color.YELLOW} />
+      <Lane position="bottom" color={Color.RED} />
+      <Lane position="left" color={Color.GREEN} />
+      <Lane position="right" color={Color.BLUE} />
     </div>
   );
 };
