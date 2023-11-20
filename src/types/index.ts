@@ -1,13 +1,5 @@
-export enum Color {
-  RED,
-  GREEN,
-  YELLOW,
-  BLUE,
-  WHITE,
+export interface Player {
+  isActive: boolean;
 }
 
-export enum ColorShade {
-  LIGHT,
-  NORMAL,
-  DARK,
-}
+export type PlayerNumber = '1' | '2' | '3' | '4';
