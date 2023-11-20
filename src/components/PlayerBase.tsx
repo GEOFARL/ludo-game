@@ -1,3 +1,4 @@
+import useIsActivePlayer from '../hooks/useIsActivePlayer';
 import useIsPlayer from '../hooks/useIsPlayer';
 import useIsPlayingPlayer from '../hooks/useIsPlayingPlayer';
 import { PlayerNumber } from '../types';
@@ -9,7 +10,6 @@ interface PlayerBaseProps {
   playerNumber: PlayerNumber;
   color: string;
   animationClass: string;
-  active?: boolean;
 }
 
 const PlayerBase: React.FC<PlayerBaseProps> = ({
@@ -18,7 +18,6 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
   playerNumber,
   color,
   animationClass,
-  active,
 }) => {
   const verticalClasses =
     vertical === 'top' ? 'row-span-6' : 'row-start-10 row-span-6';
@@ -46,7 +45,7 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
   const isPlayer = useIsPlayer(playerNumber);
   const isPlaying = useIsPlayingPlayer(playerNumber);
 
-  // const active = true;
+  const active = useIsActivePlayer(playerNumber);
   return (
     <div
       className={`${verticalClasses} ${horizontalClasses} ${colorClass} ${borderClasses} border-black grid grid-cols-6 grid-rows-6`}
@@ -60,7 +59,11 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
             className={`${active ? animationClass : ''} ${color}`}
           ></div>
         ))}
-      <div className={`${titlePosition} flex justify-center items-center`}>
+      <div
+        className={`${titlePosition} flex justify-center items-center ${
+          active ? animationClass : ''
+        } ${color}`}
+      >
         <p
           className="text-3xl font-bold text-white"
           style={{

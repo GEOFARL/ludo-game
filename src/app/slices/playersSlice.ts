@@ -15,21 +15,25 @@ const defaultState = {
     isPlaying: false,
     isBot: true,
     isRolling: false,
+    isActive: false,
   },
   player2: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
+    isActive: false,
   },
   player3: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
+    isActive: false,
   },
   player4: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
+    isActive: false,
   },
 };
 
@@ -59,11 +63,42 @@ export const playersSlice = createSlice({
 
       state[`player${action.payload[0]}`].isRolling = action.payload[1];
     },
+
+    setIsActive: (state, action: PayloadAction<[PlayerNumber, boolean]>) => {
+      state.player1.isActive = false;
+      state.player2.isActive = false;
+      state.player3.isActive = false;
+      state.player4.isActive = false;
+
+      state[`player${action.payload[0]}`].isActive = action.payload[1];
+    },
+
+    moveActiveToNextOne: (state, action: PayloadAction<PlayerNumber>) => {
+      state.player1.isActive = false;
+      state.player2.isActive = false;
+      state.player3.isActive = false;
+      state.player4.isActive = false;
+
+      let nextOne: PlayerNumber;
+      let currentPlayer = +action.payload;
+
+      do {
+        nextOne = (1 + (currentPlayer % 4)).toString() as PlayerNumber;
+        currentPlayer += 1;
+      } while (!state[`player${nextOne}`].isPlaying);
+      state[`player${nextOne}`].isActive = true;
+    },
   },
 });
 
-export const { setIsPlayingPlayer, resetPlayers, setIsNotBot, setIsRolling } =
-  playersSlice.actions;
+export const {
+  setIsPlayingPlayer,
+  resetPlayers,
+  setIsNotBot,
+  setIsRolling,
+  setIsActive,
+  moveActiveToNextOne,
+} = playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.players;
 export const selectIsPlaying = createSelector(
@@ -85,6 +120,13 @@ export const selectIsRolling = createSelector(
   (_: RootState, playerNumber: PlayerNumber) => playerNumber,
   (players, playerNumber) => {
     return players[`player${playerNumber}`].isRolling;
+  }
+);
+export const selectIsActive = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].isActive;
   }
 );
 

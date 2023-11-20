@@ -3,7 +3,11 @@ import { AppDispatch } from '../app/store';
 import { setScreen } from '../app/slices/screensSlice';
 import { PlayerNumber, Screen } from '../types';
 import { selectGameSettings } from '../app/slices/gameSettingsSlice';
-import { setIsNotBot, setIsPlayingPlayer } from '../app/slices/playersSlice';
+import {
+  setIsActive,
+  setIsNotBot,
+  setIsPlayingPlayer,
+} from '../app/slices/playersSlice';
 import { getPlayerNumber, getRandomNumber } from '../utils';
 
 export default function useStartGame() {
@@ -63,6 +67,7 @@ export default function useStartGame() {
     }
 
     dispatch(setIsNotBot(playerNumber.toString() as PlayerNumber));
+    dispatch(setIsActive([playerNumber.toString() as PlayerNumber, true]));
   };
 
   return startGame;
