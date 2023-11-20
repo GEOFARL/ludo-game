@@ -18,24 +18,28 @@ const GameBoard = () => {
           horizontal="left"
           vertical="bottom"
           animationClass="pulse-red"
+          playerNumber="4"
         />
         <PlayerBase
           color={'bg-green-600'}
           horizontal="left"
           vertical="top"
           animationClass="pulse-green"
+          playerNumber="1"
         />
         <PlayerBase
           color={'bg-yellow-400'}
           horizontal="right"
           vertical="top"
           animationClass="pulse-yellow"
+          playerNumber="2"
         />
         <PlayerBase
           color={'bg-blue-600'}
           horizontal="right"
           vertical="bottom"
           animationClass="pulse-blue"
+          playerNumber="3"
         />
         <Center width={width / 5} />
         <Lane position="top" color={'bg-yellow-400'} />

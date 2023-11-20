@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         'bebas': ['Bebas Neue', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
       },
       gridColumnStart: {
         '10': '10',

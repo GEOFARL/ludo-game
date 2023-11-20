@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Player, PlayerNumber } from '../../types';
 import { RootState } from '../store';
@@ -10,38 +10,63 @@ export interface PlayersState {
   player4: Player;
 }
 
-const initialState: PlayersState = {
+const defaultState = {
   player1: {
-    isActive: false,
+    isPlaying: false,
+    isBot: true,
   },
   player2: {
-    isActive: false,
+    isPlaying: false,
+    isBot: true,
   },
   player3: {
-    isActive: false,
+    isPlaying: false,
+    isBot: true,
   },
   player4: {
-    isActive: false,
+    isPlaying: false,
+    isBot: true,
   },
 };
+
+const initialState: PlayersState = defaultState;
 
 export const playersSlice = createSlice({
   name: 'players',
   initialState,
   reducers: {
-    setActivePlayer: (
+    setIsPlayingPlayer: (
       state,
       action: PayloadAction<{ number: PlayerNumber; active: boolean }[]>
     ) => {
       action.payload.forEach((player) => {
-        state[`player${player.number}`].isActive = player.active;
+        state[`player${player.number}`].isPlaying = player.active;
       });
+    },
+    resetPlayers: () => defaultState,
+    setIsNotBot: (state, action: PayloadAction<PlayerNumber>) => {
+      state[`player${action.payload}`].isBot = false;
     },
   },
 });
 
-export const { setActivePlayer } = playersSlice.actions;
+export const { setIsPlayingPlayer, resetPlayers, setIsNotBot } =
+  playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.players;
+export const selectIsPlaying = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].isPlaying;
+  }
+);
+export const selectIsBot = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].isBot;
+  }
+);
 
 export default playersSlice.reducer;

@@ -1,4 +1,7 @@
+import { PlayerNumber } from '../types';
+
 interface PlayerBaseSpawnProps {
+  playerNumber: PlayerNumber;
   color: string;
 }
 

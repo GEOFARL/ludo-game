@@ -1,8 +1,12 @@
+import useIsPlayer from '../hooks/useIsPlayer';
+import useIsPlayingPlayer from '../hooks/useIsPlayingPlayer';
+import { PlayerNumber } from '../types';
 import PlayerBaseSpawn from './PlayerBaseSpawn';
 
 interface PlayerBaseProps {
   vertical: 'top' | 'bottom';
   horizontal: 'left' | 'right';
+  playerNumber: PlayerNumber;
   color: string;
   animationClass: string;
   active?: boolean;
@@ -11,6 +15,7 @@ interface PlayerBaseProps {
 const PlayerBase: React.FC<PlayerBaseProps> = ({
   vertical,
   horizontal,
+  playerNumber,
   color,
   animationClass,
   active,
@@ -22,24 +27,32 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
   const colorClass = color;
 
   let borderClasses;
+  let titlePosition;
 
   if (vertical === 'top' && horizontal === 'left') {
     borderClasses = 'border-r-2 border-b-2';
+    titlePosition = 'col-start-2 col-span-4 row-start-1';
   } else if (vertical === 'top' && horizontal === 'right') {
     borderClasses = 'border-l-2 border-b-2';
+    titlePosition = 'col-start-2 col-span-4 row-start-1';
   } else if (vertical === 'bottom' && horizontal === 'right') {
     borderClasses = 'border-l-2 border-t-2';
+    titlePosition = 'col-start-2 col-span-4 row-start-6';
   } else if (vertical === 'bottom' && horizontal === 'left') {
     borderClasses = 'border-r-2 border-t-2';
+    titlePosition = 'col-start-2 col-span-4 row-start-6';
   }
+
+  const isPlayer = useIsPlayer(playerNumber);
+  const isPlaying = useIsPlayingPlayer(playerNumber);
 
   // const active = true;
   return (
     <div
       className={`${verticalClasses} ${horizontalClasses} ${colorClass} ${borderClasses} border-black grid grid-cols-6 grid-rows-6`}
     >
-      <PlayerBaseSpawn color={color} />
-      {Array(20)
+      <PlayerBaseSpawn playerNumber={playerNumber} color={color} />
+      {Array(17)
         .fill(0)
         .map((_, i) => (
           <div
@@ -47,6 +60,16 @@ const PlayerBase: React.FC<PlayerBaseProps> = ({
             className={`${active ? animationClass : ''} ${color}`}
           ></div>
         ))}
+      <div className={`${titlePosition} flex justify-center items-center`}>
+        <p
+          className="text-3xl font-bold text-white"
+          style={{
+            textShadow: 'black 0px 0px 4px',
+          }}
+        >
+          {isPlayer ? 'You' : isPlaying ? 'Bot' : ''}
+        </p>
+      </div>
     </div>
   );
 };

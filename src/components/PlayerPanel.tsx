@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { getRandomNumber } from '../utils';
+import { PlayerNumber } from '../types';
+import useIsActivePlayer from '../hooks/useIsPlayingPlayer';
 
 interface PlayerPanelProps {
-  playerNumber: number;
+  playerNumber: PlayerNumber;
 }
 
 const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
   const [score, setScore] = useState(0);
+  const isActive = useIsActivePlayer(playerNumber);
 
   const disabled = true;
 
-  return (
+  return isActive ? (
     <div className="flex p-3 bg-white gap-3 rounded-md shadow-md items-center">
       <p>Score: {score}</p>
       <button
@@ -27,6 +30,8 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
         Roll Dice
       </button>
     </div>
+  ) : (
+    <div></div>
   );
 };
 
