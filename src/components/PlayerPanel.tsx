@@ -8,6 +8,8 @@ import useRollDice from '../hooks/useRollDice';
 import { useEffect } from 'react';
 import useIsSelecting from '../hooks/useIsSelecting';
 
+import arrow from '../assets/arrow.png';
+
 interface PlayerPanelProps {
   playerNumber: PlayerNumber;
 }
@@ -23,6 +25,27 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
 
   const disabled = isRolling || !isActive || isSelecting;
 
+  let arrowClasses;
+
+  switch (playerNumber) {
+    case '1': {
+      arrowClasses = '';
+      break;
+    }
+    case '2': {
+      arrowClasses = '-right-36 arrow-right';
+      break;
+    }
+    case '3': {
+      arrowClasses = '-right-36 arrow-right';
+      break;
+    }
+    case '4': {
+      arrowClasses = '';
+      break;
+    }
+  }
+
   useEffect(() => {
     (async () => {
       if (isActive && !isPlayer && !isRolling) {
@@ -37,7 +60,7 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
         +playerNumber === 1 || +playerNumber === 4
           ? 'flex-row'
           : 'flex-row-reverse'
-      }`}
+      } relative`}
     >
       <div className="flex p-4 bg-white gap-3 rounded-md shadow-md items-center">
         <p>Score: {score}</p>
@@ -57,6 +80,13 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
           </button>
         )}
       </div>
+      {isPlayer && !disabled && (
+        <div
+          className={`absolute w-24 h-24 ${arrowClasses} -top-4 right-52  arrow-left`}
+        >
+          <img src={arrow} alt="arrow"></img>
+        </div>
+      )}
       {isRolling && (
         <Card additionalClassnames="p-1 px-3 flex items-center">
           <p>Rolling...</p>
