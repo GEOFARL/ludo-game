@@ -1,1 +1,1 @@
-export const ROLL_TIME = 1000;
+export const ROLL_TIME = 1500;

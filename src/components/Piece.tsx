@@ -5,6 +5,7 @@ import bluePiece from '../assets/blue-piece.png';
 import redPiece from '../assets/red-piece.png';
 import { useSelector } from 'react-redux';
 import { selectWidth } from '../app/slices/boardSlice';
+import { ForwardedRef, forwardRef } from 'react';
 
 interface PieceProps {
   playerNumber: PlayerNumber;
@@ -18,7 +19,10 @@ const playerToPiece = {
   '4': redPiece,
 };
 
-const Piece: React.FC<PieceProps> = ({ playerNumber, pieceNumber }) => {
+const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
+  { playerNumber, pieceNumber },
+  ref: ForwardedRef<HTMLDivElement | null>
+) {
   const width = useSelector(selectWidth) ?? 0;
 
   let leftAdjustment: number;
@@ -70,6 +74,7 @@ const Piece: React.FC<PieceProps> = ({ playerNumber, pieceNumber }) => {
         bottom: topAdjustment + (width / 15) * 1.6,
         left: leftAdjustment + (width / 15) * 1.6,
       }}
+      ref={ref}
     >
       <img
         src={playerToPiece[playerNumber]}
@@ -77,6 +82,6 @@ const Piece: React.FC<PieceProps> = ({ playerNumber, pieceNumber }) => {
       />
     </div>
   );
-};
+});
 
 export default Piece;

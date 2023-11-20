@@ -9,6 +9,7 @@ import {
   setIsPlayingPlayer,
 } from '../app/slices/playersSlice';
 import { getPlayerNumber, getRandomNumber } from '../utils';
+import { addPiecesForPlayer } from '../app/slices/piecesSlice';
 
 export default function useStartGame() {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,6 +44,12 @@ export default function useStartGame() {
             },
           ])
         );
+
+        dispatch(addPiecesForPlayer(playerNumber.toString() as PlayerNumber));
+        dispatch(
+          addPiecesForPlayer(randomPlayerNumber.toString() as PlayerNumber)
+        );
+
         dispatch(
           setIsPlayingPlayer(
             leftPlayerNumbers.map((n) => {
@@ -62,6 +69,10 @@ export default function useStartGame() {
             { active: true, number: '4' },
           ])
         );
+        dispatch(addPiecesForPlayer('1'));
+        dispatch(addPiecesForPlayer('2'));
+        dispatch(addPiecesForPlayer('3'));
+        dispatch(addPiecesForPlayer('4'));
         break;
       }
     }

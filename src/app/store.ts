@@ -3,6 +3,7 @@ import playersReducer from './slices/playersSlice';
 import screensReducer from './slices/screensSlice';
 import gameSettingsReducer from './slices/gameSettingsSlice';
 import boardReducer from './slices/boardSlice';
+import piecesReducer from './slices/piecesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     screens: screensReducer,
     gameSettings: gameSettingsReducer,
     board: boardReducer,
+    pieces: piecesReducer,
   },
 });
 

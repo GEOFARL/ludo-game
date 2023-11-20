@@ -3,6 +3,18 @@ export interface Player {
   isBot: boolean;
   isRolling: boolean;
   isActive: boolean;
+  isSelecting: boolean;
+}
+
+export interface Piece {
+  playerNumber: PlayerNumber;
+  pieceNumber: PieceNumber;
+  position: Position | null;
+}
+
+export interface Position {
+  y: number;
+  x: number;
 }
 
 export type PlayerNumber = '1' | '2' | '3' | '4';

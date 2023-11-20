@@ -16,24 +16,28 @@ const defaultState = {
     isBot: true,
     isRolling: false,
     isActive: false,
+    isSelecting: false,
   },
   player2: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
     isActive: false,
+    isSelecting: false,
   },
   player3: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
     isActive: false,
+    isSelecting: false,
   },
   player4: {
     isPlaying: false,
     isBot: true,
     isRolling: false,
     isActive: false,
+    isSelecting: false,
   },
 };
 
@@ -73,6 +77,15 @@ export const playersSlice = createSlice({
       state[`player${action.payload[0]}`].isActive = action.payload[1];
     },
 
+    setIsSelecting: (state, action: PayloadAction<[PlayerNumber, boolean]>) => {
+      state.player1.isSelecting = false;
+      state.player2.isSelecting = false;
+      state.player3.isSelecting = false;
+      state.player4.isSelecting = false;
+
+      state[`player${action.payload[0]}`].isSelecting = action.payload[1];
+    },
+
     moveActiveToNextOne: (state, action: PayloadAction<PlayerNumber>) => {
       state.player1.isActive = false;
       state.player2.isActive = false;
@@ -86,6 +99,7 @@ export const playersSlice = createSlice({
         nextOne = (1 + (currentPlayer % 4)).toString() as PlayerNumber;
         currentPlayer += 1;
       } while (!state[`player${nextOne}`].isPlaying);
+
       state[`player${nextOne}`].isActive = true;
     },
   },
@@ -97,6 +111,7 @@ export const {
   setIsNotBot,
   setIsRolling,
   setIsActive,
+  setIsSelecting,
   moveActiveToNextOne,
 } = playersSlice.actions;
 
@@ -127,6 +142,13 @@ export const selectIsActive = createSelector(
   (_: RootState, playerNumber: PlayerNumber) => playerNumber,
   (players, playerNumber) => {
     return players[`player${playerNumber}`].isActive;
+  }
+);
+export const selectIsSelecting = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].isSelecting;
   }
 );
 
