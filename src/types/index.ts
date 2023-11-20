@@ -6,6 +6,7 @@ export interface Player {
 }
 
 export type PlayerNumber = '1' | '2' | '3' | '4';
+export type PieceNumber = PlayerNumber;
 export type Color = 'red' | 'green' | 'yellow' | 'blue';
 
 export type NumberOfPlayers = 2 | 4;

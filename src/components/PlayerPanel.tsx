@@ -37,11 +37,13 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
 
   return isPlaying ? (
     <div
-      className={`h-24 flex ${
-        +playerNumber < 3 ? 'justify-end' : 'justify-start'
-      } flex-col`}
+      className={`flex gap-3 ${
+        +playerNumber === 1 || +playerNumber === 4
+          ? 'flex-row'
+          : 'flex-row-reverse'
+      }`}
     >
-      <div className="flex p-3 bg-white gap-3 rounded-md shadow-md items-center">
+      <div className="flex p-4 bg-white gap-3 rounded-md shadow-md items-center">
         <p>Score: {score}</p>
         {isPlayer && (
           <button
@@ -65,7 +67,7 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
         )}
       </div>
       {isRolling && (
-        <Card additionalClassnames="p-1 px-3 mt-2">
+        <Card additionalClassnames="p-1 px-3 flex items-center">
           <p>Rolling...</p>
         </Card>
       )}

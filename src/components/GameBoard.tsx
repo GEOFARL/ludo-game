@@ -5,12 +5,12 @@ import Lane from './Lane';
 import PlayerBase from './PlayerBase';
 
 const GameBoard = () => {
-  const { ref, width } = useWidth();
+  const ref = useWidth();
   return (
     <div className="w-[900px] mx-auto mt-3">
       <Controls position="top" />
       <div
-        className="grid grid-cols-[repeat(15,_minmax(0,_1fr))] grid-rows-[repeat(15,_minmax(0,_1fr))] border-2 border-black"
+        className="grid grid-cols-[repeat(15,_minmax(0,_1fr))] grid-rows-[repeat(15,_minmax(0,_1fr))] border-2 border-black relative"
         ref={ref}
       >
         <PlayerBase
@@ -41,7 +41,7 @@ const GameBoard = () => {
           animationClass="pulse-blue"
           playerNumber="3"
         />
-        <Center width={width / 5} />
+        <Center />
         <Lane position="top" color={'bg-yellow-400'} />
         <Lane position="bottom" color={'bg-red-500'} />
         <Lane position="left" color={'bg-green-600'} />
