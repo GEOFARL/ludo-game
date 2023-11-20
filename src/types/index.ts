@@ -1,6 +1,7 @@
 export interface Player {
   isPlaying: boolean;
   isBot: boolean;
+  isRolling: boolean;
 }
 
 export type PlayerNumber = '1' | '2' | '3' | '4';

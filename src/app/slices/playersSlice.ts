@@ -14,18 +14,22 @@ const defaultState = {
   player1: {
     isPlaying: false,
     isBot: true,
+    isRolling: false,
   },
   player2: {
     isPlaying: false,
     isBot: true,
+    isRolling: false,
   },
   player3: {
     isPlaying: false,
     isBot: true,
+    isRolling: false,
   },
   player4: {
     isPlaying: false,
     isBot: true,
+    isRolling: false,
   },
 };
 
@@ -47,10 +51,18 @@ export const playersSlice = createSlice({
     setIsNotBot: (state, action: PayloadAction<PlayerNumber>) => {
       state[`player${action.payload}`].isBot = false;
     },
+    setIsRolling: (state, action: PayloadAction<[PlayerNumber, boolean]>) => {
+      state.player1.isRolling = false;
+      state.player2.isRolling = false;
+      state.player3.isRolling = false;
+      state.player4.isRolling = false;
+
+      state[`player${action.payload[0]}`].isRolling = action.payload[1];
+    },
   },
 });
 
-export const { setIsPlayingPlayer, resetPlayers, setIsNotBot } =
+export const { setIsPlayingPlayer, resetPlayers, setIsNotBot, setIsRolling } =
   playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.players;
@@ -66,6 +78,13 @@ export const selectIsBot = createSelector(
   (_: RootState, playerNumber: PlayerNumber) => playerNumber,
   (players, playerNumber) => {
     return players[`player${playerNumber}`].isBot;
+  }
+);
+export const selectIsRolling = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].isRolling;
   }
 );
 
