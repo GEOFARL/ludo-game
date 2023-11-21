@@ -13,6 +13,7 @@ export interface Piece {
   position: Position | null;
   previousPosition: Position | null;
   possiblePosition: Position | null;
+  outOfPlay: boolean;
 }
 
 export interface Position {

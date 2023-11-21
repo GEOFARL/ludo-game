@@ -4,6 +4,7 @@ import {
   removeSelectedPiece,
   resetPossiblePositions,
   selectSelectedPiece,
+  setOutOfPlay,
   setPosition,
 } from '../app/slices/piecesSlice';
 import { AppDispatch } from '../app/store';
@@ -46,6 +47,15 @@ export default function useMove(playerNumber: PlayerNumber) {
               piece.possiblePosition,
             ])
           );
+
+          if (
+            piece.possiblePosition.x > 5 &&
+            piece.possiblePosition.x < 9 &&
+            piece.possiblePosition.y > 5 &&
+            piece.possiblePosition.y < 9
+          ) {
+            dispatch(setOutOfPlay([piece.playerNumber, piece.pieceNumber]));
+          }
         }
       }
     });

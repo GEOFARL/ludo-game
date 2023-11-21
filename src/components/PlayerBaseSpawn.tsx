@@ -1,4 +1,5 @@
 import useDisplace from '../hooks/useDisplace';
+import useIsPlayingPlayer from '../hooks/useIsPlayingPlayer';
 import useSelect from '../hooks/useSelect';
 import { PlayerNumber } from '../types';
 import Piece from './Piece';
@@ -15,6 +16,8 @@ const PlayerBaseSpawn: React.FC<PlayerBaseSpawnProps> = ({
   const refs = useSelect(playerNumber);
   useDisplace(playerNumber, refs);
 
+  const isPlaying = useIsPlayingPlayer(playerNumber);
+
   return (
     <div
       className={`row-start-2 row-span-4 col-start-2 col-span-4 bg-white border-2 border-black grid grid-cols-2 grid-rows-2`}
@@ -23,28 +26,36 @@ const PlayerBaseSpawn: React.FC<PlayerBaseSpawnProps> = ({
         <div
           className={`w-[50%] h-[50%] rounded-full ${color} border-2 border-black`}
         >
-          <Piece playerNumber={playerNumber} pieceNumber="1" ref={refs[0]} />
+          {isPlaying && (
+            <Piece playerNumber={playerNumber} pieceNumber="1" ref={refs[0]} />
+          )}
         </div>
       </div>
       <div className="flex justify-center items-center">
         <div
           className={`w-[50%] h-[50%] rounded-full ${color} border-2 border-black`}
         >
-          <Piece playerNumber={playerNumber} pieceNumber="2" ref={refs[1]} />
+          {isPlaying && (
+            <Piece playerNumber={playerNumber} pieceNumber="2" ref={refs[1]} />
+          )}
         </div>
       </div>
       <div className="flex justify-center items-center">
         <div
           className={`w-[50%] h-[50%] rounded-full ${color} border-2 border-black`}
         >
-          <Piece playerNumber={playerNumber} pieceNumber="3" ref={refs[2]} />
+          {isPlaying && (
+            <Piece playerNumber={playerNumber} pieceNumber="3" ref={refs[2]} />
+          )}
         </div>
       </div>
       <div className="flex justify-center items-center">
         <div
           className={`w-[50%] h-[50%] rounded-full ${color} border-2 border-black`}
         >
-          <Piece playerNumber={playerNumber} pieceNumber="4" ref={refs[3]} />
+          {isPlaying && (
+            <Piece playerNumber={playerNumber} pieceNumber="4" ref={refs[3]} />
+          )}
         </div>
       </div>
     </div>

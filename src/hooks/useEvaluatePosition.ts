@@ -24,6 +24,18 @@ export default function useEvaluatePosition(playerNumber: PlayerNumber) {
       let arePossiblePositions = false;
 
       pieces.forEach((piece) => {
+        if (piece.outOfPlay) return;
+        const addPossiblePosition = () => {
+          const newPosition = findNextPosition(
+            piece.position!,
+            newScore,
+            playerNumber
+          );
+          dispatch(
+            setPossiblePosition([playerNumber, piece.pieceNumber, newPosition])
+          );
+        };
+
         if (newScore === 6 && piece.position === null) {
           switch (playerNumber) {
             case '1': {
@@ -55,16 +67,60 @@ export default function useEvaluatePosition(playerNumber: PlayerNumber) {
               break;
             }
           }
+          return;
         } else if (piece.position === null) {
           return;
-        } else {
-          const newPosition = findNextPosition(piece.position, newScore);
-          console.log('new position', newPosition);
-          dispatch(
-            setPossiblePosition([playerNumber, piece.pieceNumber, newPosition])
-          );
-          arePossiblePositions = true;
+        } else if (piece.position.x === 7 || piece.position.y === 7) {
+          switch (playerNumber) {
+            case '1': {
+              if (piece.position.y === 7 && piece.position.x < 6) {
+                if (newScore <= 6 - piece.position.x) {
+                  arePossiblePositions = true;
+                  addPossiblePosition();
+                } else {
+                  return;
+                }
+              }
+              break;
+            }
+            case '2': {
+              if (piece.position.x === 7 && piece.position.y < 6) {
+                if (newScore <= 6 - piece.position.y) {
+                  arePossiblePositions = true;
+                  addPossiblePosition();
+                } else {
+                  return;
+                }
+              }
+              break;
+            }
+            case '3': {
+              if (piece.position.y === 7 && piece.position.x > 8) {
+                if (newScore <= piece.position.x - 8) {
+                  arePossiblePositions = true;
+                  addPossiblePosition();
+                } else {
+                  return;
+                }
+              }
+              break;
+            }
+            case '4': {
+              if (piece.position.x === 7 && piece.position.y > 8) {
+                if (newScore <= piece.position.y - 8) {
+                  arePossiblePositions = true;
+                  addPossiblePosition();
+                } else {
+                  return;
+                }
+              }
+              break;
+            }
+          }
         }
+
+        addPossiblePosition();
+        arePossiblePositions = true;
       });
       return arePossiblePositions;
     },

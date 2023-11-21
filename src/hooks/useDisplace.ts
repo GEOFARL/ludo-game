@@ -45,13 +45,13 @@ export default function useDisplace(
       if (!position) return;
 
       if (!previousPositions[positionIdx]) {
-        console.log(
-          'displacing from',
-          previousPositions[positionIdx],
-          'to',
-          position
-        );
-        console.log(piecesForPlayer[positionIdx]);
+        // console.log(
+        //   'displacing from',
+        //   previousPositions[positionIdx],
+        //   'to',
+        //   position
+        // );
+        // console.log(piecesForPlayer[positionIdx]);
         switch (positionIdx + 1) {
           case 1: {
             const [bottom, left] = getCoordinates(width, position);
@@ -93,13 +93,13 @@ export default function useDisplace(
         position.x !== previousPositions[positionIdx]!.x ||
         position.y !== previousPositions[positionIdx]!.y
       ) {
-        console.log(
-          'displacing from',
-          previousPositions[positionIdx],
-          'to',
-          position
-        );
-        console.log(piecesForPlayer[positionIdx], '2');
+        // console.log(
+        //   'displacing from',
+        //   previousPositions[positionIdx],
+        //   'to',
+        //   position
+        // );
+        // console.log(piecesForPlayer[positionIdx], '2');
         switch (positionIdx + 1) {
           case 1: {
             const [bottom, left] = getCoordinates(width, position);
