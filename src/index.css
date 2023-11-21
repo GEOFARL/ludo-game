@@ -91,3 +91,26 @@ body {
 .arrow-left {
   animation: arrow-left 0.5s linear infinite;
 }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.active-piece::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: -18%;
+  left: -21%;
+  width: 141%; /* Same width as the main element */
+  height: 141%; /* Same height as the main element */
+  border-radius: 50%;
+  border: 5px dashed black;
+  animation: rotate 3s linear infinite;
+}

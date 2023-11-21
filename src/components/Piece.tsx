@@ -6,6 +6,8 @@ import redPiece from '../assets/red-piece.png';
 import { useSelector } from 'react-redux';
 import { selectWidth } from '../app/slices/boardSlice';
 import { ForwardedRef, forwardRef } from 'react';
+import useIsActivePlayer from '../hooks/useIsActivePlayer';
+import useIsSelecting from '../hooks/useIsSelecting';
 
 interface PieceProps {
   playerNumber: PlayerNumber;
@@ -28,6 +30,9 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
   let leftAdjustment: number;
   let topAdjustment: number;
 
+  const isActive = useIsActivePlayer(playerNumber);
+  const isSelecting = useIsSelecting(playerNumber);
+
   switch (playerNumber) {
     case '1': {
       leftAdjustment = 0;
@@ -40,13 +45,13 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
       break;
     }
     case '3': {
-      leftAdjustment = (width / 15) * 9;
-      topAdjustment = 0;
+      leftAdjustment = (width / 15) * 9 - 0.75;
+      topAdjustment = -2.25;
       break;
     }
     case '4': {
-      leftAdjustment = 0;
-      topAdjustment = 0;
+      leftAdjustment = -0.75;
+      topAdjustment = -2.25;
       break;
     }
   }
@@ -58,18 +63,25 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
     }
     case '2': {
       topAdjustment += (width / 15) * 2;
-      leftAdjustment += (width / 15) * 2 - 3;
+      leftAdjustment += (width / 15) * 2 - 3.75;
       break;
     }
     case '3': {
-      leftAdjustment += (width / 15) * 2 - 3;
+      leftAdjustment += (width / 15) * 2 - 3.75;
+      topAdjustment += 3;
+      break;
+    }
+    case '4': {
+      topAdjustment += 3;
       break;
     }
   }
 
   return (
     <div
-      className="w-12 h-12 absolute"
+      className={`absolute ${
+        isActive && isSelecting ? 'active-piece' : ''
+      } w-[50px] h-[50px]`}
       style={{
         bottom: topAdjustment + (width / 15) * 1.6,
         left: leftAdjustment + (width / 15) * 1.6,

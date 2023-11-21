@@ -24,6 +24,7 @@ function App() {
     <div className="bg-slate-200 min-h-screen">
       <Header />
       {screen}
+      {/* <GameScreen /> */}
     </div>
   );
 }
