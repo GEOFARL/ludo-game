@@ -8,6 +8,7 @@ import { selectWidth } from '../app/slices/boardSlice';
 import { ForwardedRef, forwardRef } from 'react';
 import useIsActivePlayer from '../hooks/useIsActivePlayer';
 import useIsSelecting from '../hooks/useIsSelecting';
+import usePiecesForPlayer from '../hooks/usePiecesForPlayer';
 
 interface PieceProps {
   playerNumber: PlayerNumber;
@@ -32,6 +33,10 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
 
   const isActive = useIsActivePlayer(playerNumber);
   const isSelecting = useIsSelecting(playerNumber);
+
+  const isPossibleToMove = usePiecesForPlayer(playerNumber).find(
+    (piece) => piece.pieceNumber === pieceNumber
+  )?.possiblePosition;
 
   switch (playerNumber) {
     case '1': {
@@ -80,7 +85,9 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
   return (
     <div
       className={`absolute ${
-        isActive && isSelecting ? 'active-piece' : ''
+        isActive && isSelecting && isPossibleToMove !== null
+          ? 'active-piece'
+          : ''
       } w-[50px] h-[50px] transition-all duration-500`}
       style={{
         bottom: topAdjustment + (width / 15) * 1.6,

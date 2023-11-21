@@ -27,21 +27,17 @@ export default function useMove(playerNumber: PlayerNumber) {
     if (possiblePositions.every((position) => position === null)) {
       return;
     }
-    console.log('1');
     if (isActive && !isPlayer) {
       dispatch(resetPossiblePositions());
       dispatch(moveActiveToNextOne(playerNumber));
       return;
     }
-    console.log('2', selectedPiece, isActive);
     if (!selectedPiece || !isActive) {
       return;
     }
-    console.log('3');
 
     piecesForPlayer.forEach((piece) => {
       if (piece.pieceNumber === selectedPiece.pieceNumber) {
-        console.log('outer');
         if (piece.possiblePosition !== null) {
           dispatch(
             setPosition([

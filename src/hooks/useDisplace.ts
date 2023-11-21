@@ -45,7 +45,6 @@ export default function useDisplace(
       if (!position) return;
 
       if (!previousPositions[positionIdx]) {
-        // MOVE PIECE HERE
         console.log(
           'displacing from',
           previousPositions[positionIdx],
@@ -94,13 +93,39 @@ export default function useDisplace(
         position.x !== previousPositions[positionIdx]!.x ||
         position.y !== previousPositions[positionIdx]!.y
       ) {
-        // console.log(
-        //   'displacing from',
-        //   previousPositions[positionIdx],
-        //   'to',
-        //   position
-        // );
-        // console.log(piecesForPlayer[positionIdx], '2');
+        console.log(
+          'displacing from',
+          previousPositions[positionIdx],
+          'to',
+          position
+        );
+        console.log(piecesForPlayer[positionIdx], '2');
+        switch (positionIdx + 1) {
+          case 1: {
+            const [bottom, left] = getCoordinates(width, position);
+            firstRef.current!.style.bottom = `${bottom}px`;
+            firstRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 2: {
+            const [bottom, left] = getCoordinates(width, position);
+            secondRef.current!.style.bottom = `${bottom}px`;
+            secondRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 3: {
+            const [bottom, left] = getCoordinates(width, position);
+            thirdRef.current!.style.bottom = `${bottom}px`;
+            thirdRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 4: {
+            const [bottom, left] = getCoordinates(width, position);
+            fourthRef.current!.style.bottom = `${bottom}px`;
+            fourthRef.current!.style.left = `${left}px`;
+            break;
+          }
+        }
         dispatch(
           setPreviousPosition([
             playerNumber,
@@ -121,5 +146,6 @@ export default function useDisplace(
     previousPositions,
     playerNumber,
     dispatch,
+    width,
   ]);
 }

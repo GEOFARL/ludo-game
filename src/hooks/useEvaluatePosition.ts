@@ -5,6 +5,7 @@ import { AppDispatch } from '../app/store';
 import { setPossiblePosition } from '../app/slices/piecesSlice';
 import useIsActivePlayer from './useIsActivePlayer';
 import usePiecesForPlayer from './usePiecesForPlayer';
+import findNextPosition from '../utils/findNextPosition';
 
 export default function useEvaluatePosition(playerNumber: PlayerNumber) {
   const pieces = usePiecesForPlayer(playerNumber);
@@ -20,38 +21,52 @@ export default function useEvaluatePosition(playerNumber: PlayerNumber) {
         return;
       }
 
-      if (newScore === 6) {
-        pieces.forEach((piece) => {
-          if (piece.position === null) {
-            switch (playerNumber) {
-              case '1': {
-                dispatch(
-                  setPossiblePosition(['1', piece.pieceNumber, { y: 6, x: 1 }])
-                );
-                break;
-              }
-              case '2': {
-                dispatch(
-                  setPossiblePosition(['2', piece.pieceNumber, { y: 1, x: 8 }])
-                );
-                break;
-              }
-              case '3': {
-                dispatch(
-                  setPossiblePosition(['3', piece.pieceNumber, { y: 8, x: 13 }])
-                );
-                break;
-              }
-              case '4': {
-                dispatch(
-                  setPossiblePosition(['4', piece.pieceNumber, { y: 13, x: 6 }])
-                );
-                break;
-              }
+      let arePossiblePositions = false;
+
+      pieces.forEach((piece) => {
+        if (newScore === 6 && piece.position === null) {
+          switch (playerNumber) {
+            case '1': {
+              dispatch(
+                setPossiblePosition(['1', piece.pieceNumber, { y: 6, x: 1 }])
+              );
+              arePossiblePositions = true;
+              break;
+            }
+            case '2': {
+              dispatch(
+                setPossiblePosition(['2', piece.pieceNumber, { y: 1, x: 8 }])
+              );
+              arePossiblePositions = true;
+              break;
+            }
+            case '3': {
+              dispatch(
+                setPossiblePosition(['3', piece.pieceNumber, { y: 8, x: 13 }])
+              );
+              arePossiblePositions = true;
+              break;
+            }
+            case '4': {
+              dispatch(
+                setPossiblePosition(['4', piece.pieceNumber, { y: 13, x: 6 }])
+              );
+              arePossiblePositions = true;
+              break;
             }
           }
-        });
-      }
+        } else if (piece.position === null) {
+          return;
+        } else {
+          const newPosition = findNextPosition(piece.position, newScore);
+          console.log('new position', newPosition);
+          dispatch(
+            setPossiblePosition([playerNumber, piece.pieceNumber, newPosition])
+          );
+          arePossiblePositions = true;
+        }
+      });
+      return arePossiblePositions;
     },
     [pieces, playerNumber, dispatch, isActive]
   );

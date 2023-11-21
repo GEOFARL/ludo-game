@@ -6,6 +6,7 @@ import { AppDispatch } from '../app/store';
 import { setSelectedPiece } from '../app/slices/piecesSlice';
 import useIsSelecting from './useIsSelecting';
 import useIsPlayer from './useIsPlayer';
+import usePiecesForPlayer from './usePiecesForPlayer';
 
 export default function useSelect(playerNumber: PlayerNumber) {
   const firstPiece = useRef<HTMLDivElement | null>(null);
@@ -14,6 +15,8 @@ export default function useSelect(playerNumber: PlayerNumber) {
   const fourthPiece = useRef<HTMLDivElement | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
+  const pieces = usePiecesForPlayer(playerNumber);
+  const [firstP, secondP, thirdP, fourthP] = pieces;
 
   const isSelecting = useIsSelecting(playerNumber);
   const isPlayer = useIsPlayer(playerNumber);
@@ -44,10 +47,15 @@ export default function useSelect(playerNumber: PlayerNumber) {
       dispatch(setIsSelecting([playerNumber, false]));
     };
     if (isSelecting) {
-      first?.addEventListener('click', handleFirstClick);
-      second?.addEventListener('click', handleSecondClick);
-      third?.addEventListener('click', handleThirdClick);
-      fourth?.addEventListener('click', handleFourthClick);
+      console.log('selecting');
+      if (firstP.possiblePosition !== null)
+        first?.addEventListener('click', handleFirstClick);
+      if (secondP.possiblePosition !== null)
+        second?.addEventListener('click', handleSecondClick);
+      if (thirdP.possiblePosition !== null)
+        third?.addEventListener('click', handleThirdClick);
+      if (fourthP.possiblePosition !== null)
+        fourth?.addEventListener('click', handleFourthClick);
     }
 
     return () => {
@@ -65,6 +73,10 @@ export default function useSelect(playerNumber: PlayerNumber) {
     isPlayer,
     dispatch,
     playerNumber,
+    firstP,
+    secondP,
+    thirdP,
+    fourthP,
   ]);
 
   return [firstPiece, secondPiece, thirdPiece, fourthPiece];
