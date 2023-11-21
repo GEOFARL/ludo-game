@@ -12,7 +12,7 @@ export default function useIsPresentMove(playerNumber: PlayerNumber) {
     (score: number) => {
       if (score === 6) return true;
 
-      return pieces.some((piece) => piece.position !== null);
+      return pieces.some((piece) => piece.possiblePosition !== null);
     },
     [pieces]
   );

@@ -1,3 +1,4 @@
+import useDisplace from '../hooks/useDisplace';
 import useSelect from '../hooks/useSelect';
 import { PlayerNumber } from '../types';
 import Piece from './Piece';
@@ -12,6 +13,7 @@ const PlayerBaseSpawn: React.FC<PlayerBaseSpawnProps> = ({
   playerNumber,
 }) => {
   const refs = useSelect(playerNumber);
+  useDisplace(playerNumber, refs);
 
   return (
     <div

@@ -2,25 +2,68 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   removeSelectedPiece,
+  resetPossiblePositions,
   selectSelectedPiece,
+  setPosition,
 } from '../app/slices/piecesSlice';
 import { AppDispatch } from '../app/store';
 import { moveActiveToNextOne } from '../app/slices/playersSlice';
 import { PlayerNumber } from '../types';
 import useIsActivePlayer from './useIsActivePlayer';
+import useIsPlayer from './useIsPlayer';
+import usePossiblePositions from './usePossiblePositions';
+import usePiecesForPlayer from './usePiecesForPlayer';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
 
   const dispatch = useDispatch<AppDispatch>();
   const isActive = useIsActivePlayer(playerNumber);
+  const isPlayer = useIsPlayer(playerNumber);
+  const possiblePositions = usePossiblePositions(playerNumber);
+  const piecesForPlayer = usePiecesForPlayer(playerNumber);
 
   useEffect(() => {
+    if (possiblePositions.every((position) => position === null)) {
+      return;
+    }
+    console.log('1');
+    if (isActive && !isPlayer) {
+      dispatch(resetPossiblePositions());
+      dispatch(moveActiveToNextOne(playerNumber));
+      return;
+    }
+    console.log('2', selectedPiece, isActive);
     if (!selectedPiece || !isActive) {
       return;
     }
+    console.log('3');
+
+    piecesForPlayer.forEach((piece) => {
+      if (piece.pieceNumber === selectedPiece.pieceNumber) {
+        console.log('outer');
+        if (piece.possiblePosition !== null) {
+          dispatch(
+            setPosition([
+              piece.playerNumber,
+              piece.pieceNumber,
+              piece.possiblePosition,
+            ])
+          );
+        }
+      }
+    });
 
     dispatch(removeSelectedPiece());
+    dispatch(resetPossiblePositions());
     dispatch(moveActiveToNextOne(playerNumber));
-  }, [selectedPiece, dispatch, playerNumber, isActive]);
+  }, [
+    selectedPiece,
+    dispatch,
+    playerNumber,
+    isActive,
+    isPlayer,
+    possiblePositions,
+    piecesForPlayer,
+  ]);
 }

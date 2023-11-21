@@ -17,6 +17,7 @@ const defaultState = {
     isRolling: false,
     isActive: false,
     isSelecting: false,
+    score: null,
   },
   player2: {
     isPlaying: false,
@@ -24,6 +25,7 @@ const defaultState = {
     isRolling: false,
     isActive: false,
     isSelecting: false,
+    score: null,
   },
   player3: {
     isPlaying: false,
@@ -31,6 +33,7 @@ const defaultState = {
     isRolling: false,
     isActive: false,
     isSelecting: false,
+    score: null,
   },
   player4: {
     isPlaying: false,
@@ -38,6 +41,7 @@ const defaultState = {
     isRolling: false,
     isActive: false,
     isSelecting: false,
+    score: null,
   },
 };
 
@@ -86,6 +90,15 @@ export const playersSlice = createSlice({
       state[`player${action.payload[0]}`].isSelecting = action.payload[1];
     },
 
+    setScore: (state, action: PayloadAction<[PlayerNumber, number | null]>) => {
+      state.player1.isSelecting = false;
+      state.player2.isSelecting = false;
+      state.player3.isSelecting = false;
+      state.player4.isSelecting = false;
+
+      state[`player${action.payload[0]}`].score = action.payload[1];
+    },
+
     moveActiveToNextOne: (state, action: PayloadAction<PlayerNumber>) => {
       state.player1.isActive = false;
       state.player2.isActive = false;
@@ -112,6 +125,7 @@ export const {
   setIsRolling,
   setIsActive,
   setIsSelecting,
+  setScore,
   moveActiveToNextOne,
 } = playersSlice.actions;
 
@@ -149,6 +163,13 @@ export const selectIsSelecting = createSelector(
   (_: RootState, playerNumber: PlayerNumber) => playerNumber,
   (players, playerNumber) => {
     return players[`player${playerNumber}`].isSelecting;
+  }
+);
+export const selectScore = createSelector(
+  selectPlayers,
+  (_: RootState, playerNumber: PlayerNumber) => playerNumber,
+  (players, playerNumber) => {
+    return players[`player${playerNumber}`].score;
   }
 );
 

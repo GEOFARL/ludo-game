@@ -4,12 +4,15 @@ export interface Player {
   isRolling: boolean;
   isActive: boolean;
   isSelecting: boolean;
+  score: number | null;
 }
 
 export interface Piece {
   playerNumber: PlayerNumber;
   pieceNumber: PieceNumber;
   position: Position | null;
+  previousPosition: Position | null;
+  possiblePosition: Position | null;
 }
 
 export interface Position {

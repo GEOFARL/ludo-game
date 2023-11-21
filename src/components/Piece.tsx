@@ -81,7 +81,7 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
     <div
       className={`absolute ${
         isActive && isSelecting ? 'active-piece' : ''
-      } w-[50px] h-[50px]`}
+      } w-[50px] h-[50px] transition-all duration-500`}
       style={{
         bottom: topAdjustment + (width / 15) * 1.6,
         left: leftAdjustment + (width / 15) * 1.6,

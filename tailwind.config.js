@@ -13,6 +13,9 @@ export default {
       gridRowStart: {
         '10': '10',
       },
+      transitionProperty: {
+        'background-position': 'background-position',
+      },
     },
   },
   plugins: [],

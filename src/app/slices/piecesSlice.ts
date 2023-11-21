@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { Piece, PieceNumber, PlayerNumber } from '../../types';
+import { Piece, PieceNumber, PlayerNumber, Position } from '../../types';
 
 interface boardState {
   pieces: Piece[];
@@ -21,21 +21,29 @@ export const boardSlice = createSlice({
         pieceNumber: '1',
         playerNumber: action.payload,
         position: null,
+        possiblePosition: null,
+        previousPosition: null,
       });
       state.pieces.push({
         pieceNumber: '2',
         playerNumber: action.payload,
         position: null,
+        possiblePosition: null,
+        previousPosition: null,
       });
       state.pieces.push({
         pieceNumber: '3',
         playerNumber: action.payload,
         position: null,
+        possiblePosition: null,
+        previousPosition: null,
       });
       state.pieces.push({
         pieceNumber: '4',
         playerNumber: action.payload,
         position: null,
+        possiblePosition: null,
+        previousPosition: null,
       });
     },
     setSelectedPiece: (
@@ -53,11 +61,61 @@ export const boardSlice = createSlice({
     removeSelectedPiece: (state) => {
       state.selectedPieceIndex = null;
     },
+    setPossiblePosition: (
+      state,
+      action: PayloadAction<[PlayerNumber, PieceNumber, Position | null]>
+    ) => {
+      const piece = state.pieces.find(
+        (piece) =>
+          piece.pieceNumber === action.payload[1] &&
+          piece.playerNumber === action.payload[0]
+      );
+      if (piece) piece.possiblePosition = action.payload[2];
+    },
+    resetPossiblePositions: (state) => {
+      state.pieces.forEach((piece) => {
+        piece.possiblePosition = null;
+      });
+    },
+    setPosition: (
+      state,
+      action: PayloadAction<[PlayerNumber, PieceNumber, Position | null]>
+    ) => {
+      const piece = state.pieces.find(
+        (piece) =>
+          piece.pieceNumber === action.payload[1] &&
+          piece.playerNumber === action.payload[0]
+      );
+      if (piece) {
+        piece.previousPosition = piece.position;
+        piece.position = action.payload[2];
+      }
+    },
+    setPreviousPosition: (
+      state,
+      action: PayloadAction<[PlayerNumber, PieceNumber, Position | null]>
+    ) => {
+      const piece = state.pieces.find(
+        (piece) =>
+          piece.pieceNumber === action.payload[1] &&
+          piece.playerNumber === action.payload[0]
+      );
+      if (piece) {
+        piece.previousPosition = action.payload[2];
+      }
+    },
   },
 });
 
-export const { addPiecesForPlayer, setSelectedPiece, removeSelectedPiece } =
-  boardSlice.actions;
+export const {
+  addPiecesForPlayer,
+  setSelectedPiece,
+  removeSelectedPiece,
+  setPossiblePosition,
+  resetPossiblePositions,
+  setPosition,
+  setPreviousPosition,
+} = boardSlice.actions;
 
 export const selectPieces = (state: RootState) => state.pieces.pieces;
 export const selectPiecesForPlayer = createSelector(
@@ -66,8 +124,17 @@ export const selectPiecesForPlayer = createSelector(
     pieces.filter((piece) => piece.playerNumber === playerNumber)
 );
 
-export const selectSelectedPiece = (state: RootState) =>
-  state.pieces.selectedPieceIndex
+export const selectSelectedPiece = (state: RootState) => {
+  return state.pieces.selectedPieceIndex !== null
     ? state.pieces.pieces[state.pieces.selectedPieceIndex]
     : null;
+};
+
+export const selectPossibleMoves = createSelector(
+  [selectPieces, (_: RootState, playerNumber: PlayerNumber) => playerNumber],
+  (pieces, playerNumber) =>
+    pieces
+      .filter((piece) => piece.playerNumber === playerNumber)
+      .map((piece) => piece.possiblePosition)
+);
 export default boardSlice.reducer;
