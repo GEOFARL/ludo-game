@@ -6,6 +6,7 @@ import { setPossiblePosition } from '../app/slices/piecesSlice';
 import useIsActivePlayer from './useIsActivePlayer';
 import usePiecesForPlayer from './usePiecesForPlayer';
 import findNextPosition from '../utils/findNextPosition';
+import { isValidPosition } from '../utils';
 
 export default function useEvaluatePosition(playerNumber: PlayerNumber) {
   const pieces = usePiecesForPlayer(playerNumber);
@@ -26,11 +27,15 @@ export default function useEvaluatePosition(playerNumber: PlayerNumber) {
       pieces.forEach((piece) => {
         if (piece.outOfPlay) return;
         const addPossiblePosition = () => {
+          if (piece.position && !isValidPosition(piece.position)) {
+            return;
+          }
           const newPosition = findNextPosition(
             piece.position!,
             newScore,
             playerNumber
           );
+
           dispatch(
             setPossiblePosition([playerNumber, piece.pieceNumber, newPosition])
           );

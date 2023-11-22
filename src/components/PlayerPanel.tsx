@@ -48,11 +48,12 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
 
   useEffect(() => {
     (async () => {
-      if (isActive && !isPlayer && !isRolling) {
+      if (isActive && !isPlayer && !isRolling && !isSelecting) {
+        console.log('rolling');
         await rollDice();
       }
     })();
-  }, [isActive, isPlayer, isRolling, rollDice]);
+  }, [isActive, isPlayer, isRolling, isSelecting, rollDice]);
 
   return isPlaying ? (
     <div

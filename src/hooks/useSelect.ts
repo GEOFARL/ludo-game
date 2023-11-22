@@ -7,6 +7,7 @@ import { setSelectedPiece } from '../app/slices/piecesSlice';
 import useIsSelecting from './useIsSelecting';
 import useIsPlayer from './useIsPlayer';
 import usePiecesForPlayer from './usePiecesForPlayer';
+import useIsActivePlayer from './useIsActivePlayer';
 
 export default function useSelect(playerNumber: PlayerNumber) {
   const firstPiece = useRef<HTMLDivElement | null>(null);
@@ -20,10 +21,10 @@ export default function useSelect(playerNumber: PlayerNumber) {
 
   const isSelecting = useIsSelecting(playerNumber);
   const isPlayer = useIsPlayer(playerNumber);
+  const isActive = useIsActivePlayer(playerNumber);
 
   useEffect(() => {
-    if (!isPlayer) {
-      dispatch(setIsSelecting([playerNumber, false]));
+    if (!isPlayer || !isSelecting || !isActive) {
       return;
     }
     const first = firstPiece.current;
@@ -76,6 +77,7 @@ export default function useSelect(playerNumber: PlayerNumber) {
     secondP,
     thirdP,
     fourthP,
+    isActive,
   ]);
 
   return [firstPiece, secondPiece, thirdPiece, fourthPiece];

@@ -18,10 +18,13 @@ export const screensSlice = createSlice({
     setScreen: (state, action: PayloadAction<Screen>) => {
       state.screen = action.payload;
     },
+    resetScreen: (state) => {
+      state.screen = Screen.STARTING;
+    },
   },
 });
 
-export const { setScreen } = screensSlice.actions;
+export const { setScreen, resetScreen } = screensSlice.actions;
 
 export const selectScreen = (state: RootState) => state.screens.screen;
 

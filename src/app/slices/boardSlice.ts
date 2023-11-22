@@ -17,10 +17,13 @@ export const boardSlice = createSlice({
     setWidth: (state, action: PayloadAction<number>) => {
       state.width = action.payload;
     },
+    resetBoard: (state) => {
+      state.width = null;
+    },
   },
 });
 
-export const { setWidth } = boardSlice.actions;
+export const { setWidth, resetBoard } = boardSlice.actions;
 
 export const selectWidth = (state: RootState) => state.board.width;
 

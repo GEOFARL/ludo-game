@@ -70,7 +70,6 @@ export default function useDisplace(
             ])
           );
           dispatch(setIsActive([playerNumber, false]));
-          console.log('moving');
         }
         for (const coordinate of path) {
           const [bottom, left] = getCoordinates(width, coordinate);
@@ -80,7 +79,6 @@ export default function useDisplace(
         }
         if (path.length > 0) {
           dispatch(moveActiveToNextOne(playerNumber));
-          console.log('finished moving');
         }
       };
 

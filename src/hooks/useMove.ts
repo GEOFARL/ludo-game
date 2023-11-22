@@ -15,8 +15,9 @@ import useIsPlayer from './useIsPlayer';
 import usePossiblePositions from './usePossiblePositions';
 import usePiecesForPlayer from './usePiecesForPlayer';
 import useNumberOutOfPlay from './useNumberOutOfPlay';
-import { setIsOver } from '../app/slices/gameSettingsSlice';
+import { setIsOver, setWinner } from '../app/slices/gameSettingsSlice';
 import { setScreen } from '../app/slices/screensSlice';
+import { STARTING_POSITIONS, STARTING_POSITIONS_PLAYER } from '../constants';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -32,14 +33,12 @@ export default function useMove(playerNumber: PlayerNumber) {
     if (possiblePositions.every((position) => position === null)) {
       return;
     }
-    if (isActive && !isPlayer) {
-      dispatch(resetPossiblePositions());
-      dispatch(moveActiveToNextOne(playerNumber));
-      return;
-    }
+
     if (!selectedPiece || !isActive) {
       return;
     }
+
+    if (selectedPiece.playerNumber !== playerNumber) return;
 
     let moved = false;
 
@@ -53,7 +52,17 @@ export default function useMove(playerNumber: PlayerNumber) {
               piece.possiblePosition,
             ])
           );
-          moved = true;
+          const starting = STARTING_POSITIONS.find(
+            (position) =>
+              position.x === piece.position?.x &&
+              position.y === piece.position?.y
+          );
+          if (
+            piece.position &&
+            !(starting && STARTING_POSITIONS_PLAYER[playerNumber] == starting)
+          ) {
+            moved = true;
+          }
 
           if (
             piece.possiblePosition.x > 5 &&
@@ -65,6 +74,11 @@ export default function useMove(playerNumber: PlayerNumber) {
             if (numberOutOfPlay === 3) {
               dispatch(setIsOver(true));
               dispatch(setScreen(Screen.GAME_OVER));
+              if (isPlayer) {
+                dispatch(setWinner('player'));
+              } else {
+                dispatch(setWinner('bot'));
+              }
             }
           }
         }

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import usePiecesForPlayer from './usePiecesForPlayer';
 import { PieceNumber, PlayerNumber, Position } from '../types';
 import { isAlreadyPositioned, pause } from '../utils';
-import { PIECE_MOVE_TIME } from '../constants';
+import { PIECE_MOVE_TIME, STARTING_POSITIONS } from '../constants';
 import useScore from './useScore';
 import { useSelector } from 'react-redux';
 import { selectIsGameOver } from '../app/slices/gameSettingsSlice';
@@ -13,13 +13,6 @@ interface OverLap {
   position: Position;
   pieceNumbers: PieceNumber[];
 }
-
-const startingPositions = [
-  { x: 6, y: 13 },
-  { x: 1, y: 6 },
-  { x: 7, y: 1 },
-  { x: 13, y: 7 },
-];
 
 export default function usePieceOverlapping(
   playerNumber: PlayerNumber,
@@ -49,9 +42,6 @@ export default function usePieceOverlapping(
     ) {
       return;
     }
-    // console.log(movingPieces);
-    // console.log(piecesForPlayer);
-    // console.log('player number', playerNumber);
 
     const getRef = (pieceNumber: PieceNumber) => {
       switch (pieceNumber) {
@@ -89,7 +79,6 @@ export default function usePieceOverlapping(
           entry.position.x === item.position.x &&
           entry.position.y === item.position.y
         ) {
-          console.log(entry, item);
           const existingOverlap = overlaps.find(
             (overlap) =>
               overlap.position.x === item.position!.x &&
@@ -112,15 +101,13 @@ export default function usePieceOverlapping(
       }
     });
     if (overlaps.length > 0) {
-      console.log('displacing');
-      console.log(overlaps);
       overlaps.forEach(async (overlap) => {
         switch (overlap.pieceNumbers.length) {
           case 2: {
             const [firstPieceNumber, secondPieceNumber] = overlap.pieceNumbers;
 
             if (
-              !startingPositions.find(
+              !STARTING_POSITIONS.find(
                 (position) =>
                   position.x === overlap.position.x &&
                   position.y === overlap.position.y
@@ -161,7 +148,7 @@ export default function usePieceOverlapping(
               overlap.pieceNumbers;
 
             if (
-              !startingPositions.find(
+              !STARTING_POSITIONS.find(
                 (position) =>
                   position.x === overlap.position.x &&
                   position.y === overlap.position.y
@@ -217,7 +204,7 @@ export default function usePieceOverlapping(
             ] = overlap.pieceNumbers;
 
             if (
-              !startingPositions.find(
+              !STARTING_POSITIONS.find(
                 (position) =>
                   position.x === overlap.position.x &&
                   position.y === overlap.position.y

@@ -13,7 +13,6 @@ import { ROLL_TIME } from '../constants';
 import useMove from './useMove';
 import useEvaluatePosition from './useEvaluatePosition';
 import useScore from './useScore';
-import useIsPlayer from './useIsPlayer';
 
 export default function useRollDice(playerNumber: PlayerNumber) {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +21,6 @@ export default function useRollDice(playerNumber: PlayerNumber) {
   const evaluatePosition = useEvaluatePosition(playerNumber);
 
   useMove(playerNumber);
-  const isPlayer = useIsPlayer(playerNumber);
 
   const rollDice = useCallback(async () => {
     dispatch(setIsRolling([playerNumber, true]));
@@ -34,15 +32,15 @@ export default function useRollDice(playerNumber: PlayerNumber) {
 
         const arePossiblePositions = evaluatePosition(newScore);
 
-        if (arePossiblePositions && isPlayer) {
+        if (arePossiblePositions) {
           dispatch(setIsSelecting([playerNumber, true]));
-        } else {
+        } else if (!arePossiblePositions) {
           dispatch(moveActiveToNextOne(playerNumber));
         }
         resolve();
       }, ROLL_TIME);
     });
-  }, [dispatch, playerNumber, evaluatePosition, isPlayer]);
+  }, [dispatch, playerNumber, evaluatePosition]);
 
   return { score, rollDice };
 }

@@ -143,6 +143,10 @@ export const boardSlice = createSlice({
         piece.isMoving = false;
       });
     },
+    resetPieces: (state) => {
+      state.pieces = [];
+      state.selectedPieceIndex = null;
+    },
   },
 });
 
@@ -157,6 +161,7 @@ export const {
   setOutOfPlay,
   setIsMoving,
   removeIsMoving,
+  resetPieces,
 } = boardSlice.actions;
 
 export const selectPieces = createSelector(

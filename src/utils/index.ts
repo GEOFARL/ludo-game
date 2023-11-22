@@ -43,6 +43,11 @@ export const isAlreadyPositioned = (
   const currentLeft = div.style.left.replace('px', '');
 
   const [bottom, left] = getCoordinates(width, position);
-  console.log(currentBottom, currentLeft, bottom, left);
   return +currentBottom === bottom && +currentLeft === left;
+};
+
+export const isValidPosition = (position: Position) => {
+  const { x, y } = position;
+
+  return !(x > 5 && x < 9 && y > 5 && y < 9);
 };

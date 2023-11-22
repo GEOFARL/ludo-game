@@ -7,12 +7,14 @@ export interface GameSettingsState {
   numberOfPlayers: NumberOfPlayers | null;
   playerColor: Color | null;
   isOver: boolean;
+  winner: 'player' | 'bot' | null;
 }
 
 const initialState: GameSettingsState = {
   numberOfPlayers: null,
   playerColor: null,
   isOver: false,
+  winner: null,
 };
 
 export const gameSettingsSlice = createSlice({
@@ -28,11 +30,25 @@ export const gameSettingsSlice = createSlice({
     setIsOver: (state, action: PayloadAction<boolean>) => {
       state.isOver = action.payload;
     },
+    setWinner: (state, action: PayloadAction<'player' | 'bot' | null>) => {
+      state.winner = action.payload;
+    },
+    resetGameSettings: (state) => {
+      state.isOver = false;
+      state.numberOfPlayers = null;
+      state.playerColor = null;
+      state.winner = null;
+    },
   },
 });
 
-export const { setNumberOfPlayers, setPlayerColor, setIsOver } =
-  gameSettingsSlice.actions;
+export const {
+  setNumberOfPlayers,
+  setPlayerColor,
+  setIsOver,
+  setWinner,
+  resetGameSettings,
+} = gameSettingsSlice.actions;
 
 export const selectNumberOfPlayers = (state: RootState) =>
   state.gameSettings.numberOfPlayers;
@@ -43,5 +59,7 @@ export const selectPlayerColor = (state: RootState) =>
 export const selectGameSettings = (state: RootState) => state.gameSettings;
 
 export const selectIsGameOver = (state: RootState) => state.gameSettings.isOver;
+
+export const selectWinner = (state: RootState) => state.gameSettings.winner;
 
 export default gameSettingsSlice.reducer;
