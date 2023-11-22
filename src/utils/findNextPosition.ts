@@ -12,7 +12,6 @@ export default function findNextPosition(
 
   do {
     while (newY === 14 && newX >= 7 && newX <= 8 && scoreCounter > 0) {
-      console.log(newX, playerNumber);
       if (playerNumber === '4' && newX === 7) {
         while (scoreCounter > 0) {
           newY -= 1;
@@ -135,8 +134,6 @@ export default function findNextPosition(
       newX -= 1;
       scoreCounter -= 1;
     }
-
-    console.log('looping');
   } while (scoreCounter > 0);
 
   return { x: newX, y: newY };

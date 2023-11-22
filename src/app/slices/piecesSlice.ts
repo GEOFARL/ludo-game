@@ -24,6 +24,7 @@ export const boardSlice = createSlice({
         possiblePosition: null,
         previousPosition: null,
         outOfPlay: false,
+        isMoving: false,
       });
       state.pieces.push({
         pieceNumber: '2',
@@ -32,6 +33,7 @@ export const boardSlice = createSlice({
         possiblePosition: null,
         previousPosition: null,
         outOfPlay: false,
+        isMoving: false,
       });
       state.pieces.push({
         pieceNumber: '3',
@@ -40,6 +42,7 @@ export const boardSlice = createSlice({
         possiblePosition: null,
         previousPosition: null,
         outOfPlay: false,
+        isMoving: false,
       });
       state.pieces.push({
         pieceNumber: '4',
@@ -48,6 +51,7 @@ export const boardSlice = createSlice({
         possiblePosition: null,
         previousPosition: null,
         outOfPlay: false,
+        isMoving: false,
       });
     },
     setSelectedPiece: (
@@ -121,6 +125,24 @@ export const boardSlice = createSlice({
         piece.outOfPlay = true;
       }
     },
+    setIsMoving: (
+      state,
+      action: PayloadAction<[PlayerNumber, PieceNumber]>
+    ) => {
+      const piece = state.pieces.find(
+        (piece) =>
+          piece.pieceNumber === action.payload[1] &&
+          piece.playerNumber === action.payload[0]
+      );
+      if (piece) {
+        piece.isMoving = true;
+      }
+    },
+    removeIsMoving: (state) => {
+      state.pieces.forEach((piece) => {
+        piece.isMoving = false;
+      });
+    },
   },
 });
 
@@ -133,6 +155,8 @@ export const {
   setPosition,
   setPreviousPosition,
   setOutOfPlay,
+  setIsMoving,
+  removeIsMoving,
 } = boardSlice.actions;
 
 export const selectPieces = (state: RootState) => state.pieces.pieces;

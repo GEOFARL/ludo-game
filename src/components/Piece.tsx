@@ -9,6 +9,7 @@ import { ForwardedRef, forwardRef } from 'react';
 import useIsActivePlayer from '../hooks/useIsActivePlayer';
 import useIsSelecting from '../hooks/useIsSelecting';
 import usePiecesForPlayer from '../hooks/usePiecesForPlayer';
+import { PIECE_MOVE_TIME } from '../constants';
 
 interface PieceProps {
   playerNumber: PlayerNumber;
@@ -88,10 +89,11 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
         isActive && isSelecting && isPossibleToMove !== null
           ? 'active-piece'
           : ''
-      } w-[50px] h-[50px] transition-all duration-500`}
+      } w-[50px] h-[50px] transition-all`}
       style={{
         bottom: topAdjustment + (width / 15) * 1.6,
         left: leftAdjustment + (width / 15) * 1.6,
+        animationDuration: `${PIECE_MOVE_TIME}ms`,
       }}
       ref={ref}
     >

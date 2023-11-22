@@ -47,7 +47,6 @@ export default function useSelect(playerNumber: PlayerNumber) {
       dispatch(setIsSelecting([playerNumber, false]));
     };
     if (isSelecting) {
-      console.log('selecting');
       if (firstP.possiblePosition !== null)
         first?.addEventListener('click', handleFirstClick);
       if (secondP.possiblePosition !== null)

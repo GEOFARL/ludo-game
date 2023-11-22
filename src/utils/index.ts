@@ -19,3 +19,9 @@ export const getPlayerNumber = (color: Color) => {
 
   return +number;
 };
+
+export const pause = async (timeMs: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), timeMs);
+  });
+};

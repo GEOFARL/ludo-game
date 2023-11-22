@@ -1,10 +1,17 @@
-import { useEffect, useMemo } from 'react';
-import { PlayerNumber, Position } from '../types';
+import { MutableRefObject, useEffect, useMemo } from 'react';
+import { PieceNumber, PlayerNumber, Position } from '../types';
 import usePiecesForPlayer from './usePiecesForPlayer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../app/store';
-import { setPreviousPosition } from '../app/slices/piecesSlice';
+import {
+  removeIsMoving,
+  setIsMoving,
+  setPreviousPosition,
+} from '../app/slices/piecesSlice';
 import { selectWidth } from '../app/slices/boardSlice';
+import getPath from '../utils/getPath';
+import { pause } from '../utils';
+import { PIECE_MOVE_TIME } from '../constants';
 
 const getCoordinates = (width: number, position: Position) => {
   const block = width / 15;
@@ -25,6 +32,9 @@ export default function useDisplace(
   const previousPositions = useMemo(() => {
     return piecesForPlayer.map((piece) => piece.previousPosition);
   }, [piecesForPlayer]);
+  const arePiecesMoving = useMemo(() => {
+    return piecesForPlayer.map((piece) => piece.isMoving);
+  }, [piecesForPlayer]);
   const [firstRef, secondRef, thirdRef, fourthRef] = refs;
 
   const dispatch = useDispatch<AppDispatch>();
@@ -41,101 +51,69 @@ export default function useDisplace(
       return;
     }
 
-    positions.forEach((position, positionIdx) => {
+    positions.forEach(async (position, positionIdx) => {
       if (!position) return;
 
-      if (!previousPositions[positionIdx]) {
-        // console.log(
-        //   'displacing from',
-        //   previousPositions[positionIdx],
-        //   'to',
-        //   position
-        // );
-        // console.log(piecesForPlayer[positionIdx]);
-        switch (positionIdx + 1) {
-          case 1: {
-            const [bottom, left] = getCoordinates(width, position);
-            firstRef.current!.style.bottom = `${bottom}px`;
-            firstRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 2: {
-            const [bottom, left] = getCoordinates(width, position);
-            secondRef.current!.style.bottom = `${bottom}px`;
-            secondRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 3: {
-            const [bottom, left] = getCoordinates(width, position);
-            thirdRef.current!.style.bottom = `${bottom}px`;
-            thirdRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 4: {
-            const [bottom, left] = getCoordinates(width, position);
-            fourthRef.current!.style.bottom = `${bottom}px`;
-            fourthRef.current!.style.left = `${left}px`;
-            break;
-          }
-        }
+      const move = async (ref: MutableRefObject<HTMLDivElement | null>) => {
+        if (arePiecesMoving[positionIdx]) return;
 
-        dispatch(
-          setPreviousPosition([
-            playerNumber,
-            (positionIdx + 1).toString() as PlayerNumber,
-            position,
-          ])
+        if (previousPositions[positionIdx] === null) {
+          const [bottom, left] = getCoordinates(width, position);
+          ref.current!.style.bottom = `${bottom}px`;
+          ref.current!.style.left = `${left}px`;
+          return;
+        }
+        const path = getPath(
+          previousPositions[positionIdx]!,
+          position,
+          playerNumber
         );
-        return;
+
+        if (path.length > 0) {
+          dispatch(
+            setIsMoving([
+              playerNumber,
+              (positionIdx + 1).toString() as PieceNumber,
+            ])
+          );
+        }
+        for (const coordinate of path) {
+          const [bottom, left] = getCoordinates(width, coordinate);
+          ref.current!.style.bottom = `${bottom}px`;
+          ref.current!.style.left = `${left}px`;
+          await pause(PIECE_MOVE_TIME);
+        }
+        if (path.length > 0) {
+          dispatch(removeIsMoving());
+        }
+      };
+
+      switch (positionIdx + 1) {
+        case 1: {
+          await move(firstRef);
+          break;
+        }
+        case 2: {
+          await move(secondRef);
+          break;
+        }
+        case 3: {
+          await move(thirdRef);
+          break;
+        }
+        case 4: {
+          await move(fourthRef);
+          break;
+        }
       }
 
-      if (
-        position.x !== previousPositions[positionIdx]!.x ||
-        position.y !== previousPositions[positionIdx]!.y
-      ) {
-        // console.log(
-        //   'displacing from',
-        //   previousPositions[positionIdx],
-        //   'to',
-        //   position
-        // );
-        // console.log(piecesForPlayer[positionIdx], '2');
-        switch (positionIdx + 1) {
-          case 1: {
-            const [bottom, left] = getCoordinates(width, position);
-            firstRef.current!.style.bottom = `${bottom}px`;
-            firstRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 2: {
-            const [bottom, left] = getCoordinates(width, position);
-            secondRef.current!.style.bottom = `${bottom}px`;
-            secondRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 3: {
-            const [bottom, left] = getCoordinates(width, position);
-            thirdRef.current!.style.bottom = `${bottom}px`;
-            thirdRef.current!.style.left = `${left}px`;
-            break;
-          }
-          case 4: {
-            const [bottom, left] = getCoordinates(width, position);
-            fourthRef.current!.style.bottom = `${bottom}px`;
-            fourthRef.current!.style.left = `${left}px`;
-            break;
-          }
-        }
-        dispatch(
-          setPreviousPosition([
-            playerNumber,
-            (positionIdx + 1).toString() as PlayerNumber,
-            position,
-          ])
-        );
-        // MOVE PIECE HERE
-        return;
-      }
+      dispatch(
+        setPreviousPosition([
+          playerNumber,
+          (positionIdx + 1).toString() as PlayerNumber,
+          position,
+        ])
+      );
     });
   }, [
     firstRef,
@@ -147,5 +125,6 @@ export default function useDisplace(
     playerNumber,
     dispatch,
     width,
+    arePiecesMoving,
   ]);
 }
