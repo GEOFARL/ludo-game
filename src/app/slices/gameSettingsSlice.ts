@@ -6,11 +6,13 @@ import { Color, NumberOfPlayers } from '../../types';
 export interface GameSettingsState {
   numberOfPlayers: NumberOfPlayers | null;
   playerColor: Color | null;
+  isOver: boolean;
 }
 
 const initialState: GameSettingsState = {
   numberOfPlayers: null,
   playerColor: null,
+  isOver: false,
 };
 
 export const gameSettingsSlice = createSlice({
@@ -23,10 +25,14 @@ export const gameSettingsSlice = createSlice({
     setPlayerColor: (state, action: PayloadAction<Color>) => {
       state.playerColor = action.payload;
     },
+    setIsOver: (state, action: PayloadAction<boolean>) => {
+      state.isOver = action.payload;
+    },
   },
 });
 
-export const { setNumberOfPlayers, setPlayerColor } = gameSettingsSlice.actions;
+export const { setNumberOfPlayers, setPlayerColor, setIsOver } =
+  gameSettingsSlice.actions;
 
 export const selectNumberOfPlayers = (state: RootState) =>
   state.gameSettings.numberOfPlayers;
@@ -35,5 +41,7 @@ export const selectPlayerColor = (state: RootState) =>
   state.gameSettings.playerColor;
 
 export const selectGameSettings = (state: RootState) => state.gameSettings;
+
+export const selectIsGameOver = (state: RootState) => state.gameSettings.isOver;
 
 export default gameSettingsSlice.reducer;

@@ -13,7 +13,7 @@ const initialState: boardState = {
 };
 
 export const boardSlice = createSlice({
-  name: 'board',
+  name: 'pieces',
   initialState,
   reducers: {
     addPiecesForPlayer: (state, action: PayloadAction<PlayerNumber>) => {
@@ -159,7 +159,10 @@ export const {
   removeIsMoving,
 } = boardSlice.actions;
 
-export const selectPieces = (state: RootState) => state.pieces.pieces;
+export const selectPieces = createSelector(
+  (state: RootState) => state.pieces,
+  (pieces) => pieces.pieces
+);
 export const selectPiecesForPlayer = createSelector(
   [selectPieces, (_: RootState, playerNumber: PlayerNumber) => playerNumber],
   (pieces, playerNumber) =>
@@ -173,10 +176,19 @@ export const selectSelectedPiece = (state: RootState) => {
 };
 
 export const selectPossibleMoves = createSelector(
-  [selectPieces, (_: RootState, playerNumber: PlayerNumber) => playerNumber],
-  (pieces, playerNumber) =>
-    pieces
-      .filter((piece) => piece.playerNumber === playerNumber)
-      .map((piece) => piece.possiblePosition)
+  [selectPiecesForPlayer],
+  (pieces) => pieces.map((piece) => piece.possiblePosition)
 );
+export const selectIsMoving = createSelector(
+  [selectPiecesForPlayer],
+  (pieces) => pieces.map((piece) => piece.isMoving)
+);
+
+export const selectNumberOutOfPlay = createSelector(
+  [selectPiecesForPlayer],
+  (pieces) =>
+    pieces.map((piece) => piece.outOfPlay).filter((outOfPlay) => outOfPlay)
+      .length
+);
+
 export default boardSlice.reducer;

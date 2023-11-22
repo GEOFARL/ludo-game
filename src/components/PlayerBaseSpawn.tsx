@@ -1,5 +1,6 @@
 import useDisplace from '../hooks/useDisplace';
 import useIsPlayingPlayer from '../hooks/useIsPlayingPlayer';
+import usePieceOverlapping from '../hooks/usePieceOverlapping';
 import useSelect from '../hooks/useSelect';
 import { PlayerNumber } from '../types';
 import Piece from './Piece';
@@ -15,6 +16,7 @@ const PlayerBaseSpawn: React.FC<PlayerBaseSpawnProps> = ({
 }) => {
   const refs = useSelect(playerNumber);
   useDisplace(playerNumber, refs);
+  usePieceOverlapping(playerNumber, refs);
 
   const isPlaying = useIsPlayingPlayer(playerNumber);
 

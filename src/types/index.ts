@@ -38,4 +38,5 @@ export const playerNumberToColor: Record<PlayerNumber, Color> = {
 export enum Screen {
   STARTING,
   GAME,
+  GAME_OVER,
 }

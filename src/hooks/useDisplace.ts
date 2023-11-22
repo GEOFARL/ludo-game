@@ -1,5 +1,5 @@
 import { MutableRefObject, useEffect, useMemo } from 'react';
-import { PieceNumber, PlayerNumber, Position } from '../types';
+import { PieceNumber, PlayerNumber } from '../types';
 import usePiecesForPlayer from './usePiecesForPlayer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../app/store';
@@ -10,17 +10,9 @@ import {
 } from '../app/slices/piecesSlice';
 import { selectWidth } from '../app/slices/boardSlice';
 import getPath from '../utils/getPath';
-import { pause } from '../utils';
+import { getCoordinates, pause } from '../utils';
 import { PIECE_MOVE_TIME } from '../constants';
 import { moveActiveToNextOne, setIsActive } from '../app/slices/playersSlice';
-
-const getCoordinates = (width: number, position: Position) => {
-  const block = width / 15;
-  const { x, y } = position;
-  const bottom = (14 - y) * block;
-  const left = x * block;
-  return [bottom, left];
-};
 
 export default function useDisplace(
   playerNumber: PlayerNumber,
@@ -78,6 +70,7 @@ export default function useDisplace(
             ])
           );
           dispatch(setIsActive([playerNumber, false]));
+          console.log('moving');
         }
         for (const coordinate of path) {
           const [bottom, left] = getCoordinates(width, coordinate);
@@ -86,8 +79,8 @@ export default function useDisplace(
           await pause(PIECE_MOVE_TIME);
         }
         if (path.length > 0) {
-          dispatch(removeIsMoving());
           dispatch(moveActiveToNextOne(playerNumber));
+          console.log('finished moving');
         }
       };
 
@@ -110,13 +103,19 @@ export default function useDisplace(
         }
       }
 
-      dispatch(
-        setPreviousPosition([
-          playerNumber,
-          (positionIdx + 1).toString() as PlayerNumber,
-          position,
-        ])
-      );
+      if (
+        position.x !== previousPositions[positionIdx]?.x ||
+        position.y !== previousPositions[positionIdx]?.y
+      ) {
+        dispatch(
+          setPreviousPosition([
+            playerNumber,
+            (positionIdx + 1).toString() as PlayerNumber,
+            position,
+          ])
+        );
+        dispatch(removeIsMoving());
+      }
     });
   }, [
     firstRef,

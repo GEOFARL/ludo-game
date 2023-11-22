@@ -64,7 +64,7 @@ export default function getPath(
     while (y === 0 && x > 5 && x < 8 && (x !== newX || y !== newY)) {
       if (playerNumber === '2' && x === 7) {
         while (x !== newX || y !== newY) {
-          y -= 1;
+          y += 1;
           positions.push({ x, y });
         }
         break;

@@ -65,7 +65,7 @@ export default function findNextPosition(
     while (newY === 0 && newX > 5 && newX < 8 && scoreCounter > 0) {
       if (playerNumber === '2' && newX === 7) {
         while (scoreCounter > 0) {
-          newY -= 1;
+          newY += 1;
           scoreCounter -= 1;
         }
         break;

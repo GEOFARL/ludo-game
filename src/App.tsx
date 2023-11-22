@@ -1,5 +1,6 @@
 import Header from './components/Header';
 import useScreen from './hooks/useScreen';
+import GameOverScreen from './screens/GameOverScreen';
 import GameScreen from './screens/GameScreen';
 import StartingScreen from './screens/StartingScreen';
 import { Screen } from './types';
@@ -16,6 +17,10 @@ function App() {
     }
     case Screen.STARTING: {
       screen = <StartingScreen />;
+      break;
+    }
+    case Screen.GAME_OVER: {
+      screen = <GameOverScreen />;
       break;
     }
   }

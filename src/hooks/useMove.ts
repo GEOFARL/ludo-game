@@ -9,11 +9,14 @@ import {
 } from '../app/slices/piecesSlice';
 import { AppDispatch } from '../app/store';
 import { moveActiveToNextOne } from '../app/slices/playersSlice';
-import { PlayerNumber } from '../types';
+import { PlayerNumber, Screen } from '../types';
 import useIsActivePlayer from './useIsActivePlayer';
 import useIsPlayer from './useIsPlayer';
 import usePossiblePositions from './usePossiblePositions';
 import usePiecesForPlayer from './usePiecesForPlayer';
+import useNumberOutOfPlay from './useNumberOutOfPlay';
+import { setIsOver } from '../app/slices/gameSettingsSlice';
+import { setScreen } from '../app/slices/screensSlice';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -23,6 +26,7 @@ export default function useMove(playerNumber: PlayerNumber) {
   const isPlayer = useIsPlayer(playerNumber);
   const possiblePositions = usePossiblePositions(playerNumber);
   const piecesForPlayer = usePiecesForPlayer(playerNumber);
+  const numberOutOfPlay = useNumberOutOfPlay(playerNumber);
 
   useEffect(() => {
     if (possiblePositions.every((position) => position === null)) {
@@ -58,6 +62,10 @@ export default function useMove(playerNumber: PlayerNumber) {
             piece.possiblePosition.y < 9
           ) {
             dispatch(setOutOfPlay([piece.playerNumber, piece.pieceNumber]));
+            if (numberOutOfPlay === 3) {
+              dispatch(setIsOver(true));
+              dispatch(setScreen(Screen.GAME_OVER));
+            }
           }
         }
       }
@@ -77,5 +85,6 @@ export default function useMove(playerNumber: PlayerNumber) {
     isPlayer,
     possiblePositions,
     piecesForPlayer,
+    numberOutOfPlay,
   ]);
 }
