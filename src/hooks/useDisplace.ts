@@ -13,6 +13,7 @@ import getPath from '../utils/getPath';
 import { getCoordinates, pause } from '../utils';
 import { PIECE_MOVE_TIME } from '../constants';
 import { moveActiveToNextOne, setIsActive } from '../app/slices/playersSlice';
+import calculateSpawnPosition from '../utils/calculateSpawnPosition';
 
 export default function useDisplace(
   playerNumber: PlayerNumber,
@@ -45,7 +46,39 @@ export default function useDisplace(
     }
 
     positions.forEach(async (position, positionIdx) => {
-      if (!position) return;
+      if (!position && !previousPositions[positionIdx]) return;
+      if (!position && previousPositions[positionIdx]) {
+        const { bottom, left } = calculateSpawnPosition(
+          playerNumber,
+          (positionIdx + 1).toString() as PieceNumber,
+          width
+        );
+        switch (positionIdx + 1) {
+          case 1: {
+            firstRef.current!.style.bottom = `${bottom}px`;
+            firstRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 2: {
+            secondRef.current!.style.bottom = `${bottom}px`;
+            secondRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 3: {
+            thirdRef.current!.style.bottom = `${bottom}px`;
+            thirdRef.current!.style.left = `${left}px`;
+            break;
+          }
+          case 4: {
+            fourthRef.current!.style.bottom = `${bottom}px`;
+            fourthRef.current!.style.left = `${left}px`;
+            break;
+          }
+        }
+        return;
+      }
+
+      if (position === null) return;
 
       const move = async (ref: MutableRefObject<HTMLDivElement | null>) => {
         if (arePiecesMoving[positionIdx]) return;

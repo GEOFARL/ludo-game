@@ -17,7 +17,14 @@ import usePiecesForPlayer from './usePiecesForPlayer';
 import useNumberOutOfPlay from './useNumberOutOfPlay';
 import { setIsOver, setWinner } from '../app/slices/gameSettingsSlice';
 import { setScreen } from '../app/slices/screensSlice';
-import { STARTING_POSITIONS, STARTING_POSITIONS_PLAYER } from '../constants';
+import {
+  PIECE_MOVE_TIME,
+  STARTING_POSITIONS,
+  STARTING_POSITIONS_PLAYER,
+} from '../constants';
+import usePiecesForPosition from './usePiecesForPosition';
+import useScore from './useScore';
+import { pause } from '../utils';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -28,6 +35,9 @@ export default function useMove(playerNumber: PlayerNumber) {
   const possiblePositions = usePossiblePositions(playerNumber);
   const piecesForPlayer = usePiecesForPlayer(playerNumber);
   const numberOutOfPlay = useNumberOutOfPlay(playerNumber);
+  const score = useScore(playerNumber);
+
+  const findPiecesForPosition = usePiecesForPosition();
 
   useEffect(() => {
     if (possiblePositions.every((position) => position === null)) {
@@ -45,6 +55,40 @@ export default function useMove(playerNumber: PlayerNumber) {
     piecesForPlayer.forEach((piece) => {
       if (piece.pieceNumber === selectedPiece.pieceNumber) {
         if (piece.possiblePosition !== null) {
+          const piecesForPosition = findPiecesForPosition(
+            piece.possiblePosition
+          );
+          const playersPiecesCount = {
+            '1': 0,
+            '2': 0,
+            '3': 0,
+            '4': 0,
+          };
+
+          piecesForPosition.forEach((piece) => {
+            playersPiecesCount[piece.playerNumber] += 1;
+          });
+
+          piecesForPosition.forEach(async (piece) => {
+            if (
+              piece.playerNumber !== playerNumber &&
+              playersPiecesCount[piece.playerNumber] < 2
+            ) {
+              if (
+                !STARTING_POSITIONS.find(
+                  (position) =>
+                    position.x === piece.position?.x &&
+                    position.y === piece.position.y
+                )
+              ) {
+                await pause(score! * PIECE_MOVE_TIME);
+              }
+              dispatch(
+                setPosition([piece.playerNumber, piece.pieceNumber, null])
+              );
+            }
+          });
+
           dispatch(
             setPosition([
               piece.playerNumber,
@@ -100,5 +144,7 @@ export default function useMove(playerNumber: PlayerNumber) {
     possiblePositions,
     piecesForPlayer,
     numberOutOfPlay,
+    findPiecesForPosition,
+    score,
   ]);
 }

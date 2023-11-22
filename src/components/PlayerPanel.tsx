@@ -49,7 +49,6 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
   useEffect(() => {
     (async () => {
       if (isActive && !isPlayer && !isRolling && !isSelecting) {
-        console.log('rolling');
         await rollDice();
       }
     })();

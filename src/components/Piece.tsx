@@ -10,6 +10,8 @@ import useIsActivePlayer from '../hooks/useIsActivePlayer';
 import useIsSelecting from '../hooks/useIsSelecting';
 import usePiecesForPlayer from '../hooks/usePiecesForPlayer';
 import { PIECE_MOVE_TIME } from '../constants';
+import calculateSpawnPosition from '../utils/calculateSpawnPosition';
+import useIsPlayer from '../hooks/useIsPlayer';
 
 interface PieceProps {
   playerNumber: PlayerNumber;
@@ -29,70 +31,29 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
 ) {
   const width = useSelector(selectWidth) ?? 0;
 
-  let leftAdjustment: number;
-  let topAdjustment: number;
-
   const isActive = useIsActivePlayer(playerNumber);
   const isSelecting = useIsSelecting(playerNumber);
+  const isPlayer = useIsPlayer(playerNumber);
 
   const isPossibleToMove = usePiecesForPlayer(playerNumber).find(
     (piece) => piece.pieceNumber === pieceNumber
   )?.possiblePosition;
 
-  switch (playerNumber) {
-    case '1': {
-      leftAdjustment = 0;
-      topAdjustment = (width / 15) * 9;
-      break;
-    }
-    case '2': {
-      leftAdjustment = (width / 15) * 9;
-      topAdjustment = (width / 15) * 9;
-      break;
-    }
-    case '3': {
-      leftAdjustment = (width / 15) * 9 - 0.75;
-      topAdjustment = -2.25;
-      break;
-    }
-    case '4': {
-      leftAdjustment = -0.75;
-      topAdjustment = -2.25;
-      break;
-    }
-  }
-
-  switch (pieceNumber) {
-    case '1': {
-      topAdjustment += (width / 15) * 2;
-      break;
-    }
-    case '2': {
-      topAdjustment += (width / 15) * 2;
-      leftAdjustment += (width / 15) * 2 - 3.75;
-      break;
-    }
-    case '3': {
-      leftAdjustment += (width / 15) * 2 - 3.75;
-      topAdjustment += 3;
-      break;
-    }
-    case '4': {
-      topAdjustment += 3;
-      break;
-    }
-  }
-
+  const { bottom, left } = calculateSpawnPosition(
+    playerNumber,
+    pieceNumber,
+    width
+  );
   return (
     <div
       className={`absolute ${
         isActive && isSelecting && isPossibleToMove !== null
           ? 'active-piece'
           : ''
-      } w-[50px] h-[50px] transition-all`}
+      } w-[50px] h-[50px] transition-all ${isPlayer ? 'z-10' : ''}`}
       style={{
-        bottom: topAdjustment + (width / 15) * 1.6,
-        left: leftAdjustment + (width / 15) * 1.6,
+        bottom: bottom,
+        left: left,
         animationDuration: `${PIECE_MOVE_TIME}ms`,
       }}
       ref={ref}
