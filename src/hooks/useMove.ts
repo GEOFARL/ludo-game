@@ -37,6 +37,8 @@ export default function useMove(playerNumber: PlayerNumber) {
       return;
     }
 
+    let moved = false;
+
     piecesForPlayer.forEach((piece) => {
       if (piece.pieceNumber === selectedPiece.pieceNumber) {
         if (piece.possiblePosition !== null) {
@@ -47,6 +49,7 @@ export default function useMove(playerNumber: PlayerNumber) {
               piece.possiblePosition,
             ])
           );
+          moved = true;
 
           if (
             piece.possiblePosition.x > 5 &&
@@ -62,7 +65,10 @@ export default function useMove(playerNumber: PlayerNumber) {
 
     dispatch(removeSelectedPiece());
     dispatch(resetPossiblePositions());
-    dispatch(moveActiveToNextOne(playerNumber));
+
+    if (!moved) {
+      dispatch(moveActiveToNextOne(playerNumber));
+    }
   }, [
     selectedPiece,
     dispatch,

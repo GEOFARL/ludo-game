@@ -12,6 +12,7 @@ import { selectWidth } from '../app/slices/boardSlice';
 import getPath from '../utils/getPath';
 import { pause } from '../utils';
 import { PIECE_MOVE_TIME } from '../constants';
+import { moveActiveToNextOne, setIsActive } from '../app/slices/playersSlice';
 
 const getCoordinates = (width: number, position: Position) => {
   const block = width / 15;
@@ -76,6 +77,7 @@ export default function useDisplace(
               (positionIdx + 1).toString() as PieceNumber,
             ])
           );
+          dispatch(setIsActive([playerNumber, false]));
         }
         for (const coordinate of path) {
           const [bottom, left] = getCoordinates(width, coordinate);
@@ -85,6 +87,7 @@ export default function useDisplace(
         }
         if (path.length > 0) {
           dispatch(removeIsMoving());
+          dispatch(moveActiveToNextOne(playerNumber));
         }
       };
 
