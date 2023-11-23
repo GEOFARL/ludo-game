@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { PieceNumber, PlayerNumber } from '../types';
+import { PieceNumber, PlayerNumber, Position } from '../types';
 import useIsPlayer from './useIsPlayer';
 import useIsSelecting from './useIsSelecting';
 import usePossiblePositions from './usePossiblePositions';
 import { getRandomNumber } from '../utils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../app/store';
 import {
+  selectPieces,
   setRollOneMoreTime,
   setSelectedPiece,
 } from '../app/slices/piecesSlice';
@@ -21,6 +22,8 @@ import {
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
 import useBeat from './useBeat';
+import { selectDifficulty } from '../app/slices/gameSettingsSlice';
+import giveBestOption from '../utils/giveBestOption';
 
 export default function useBotSelect(playerNumber: PlayerNumber) {
   const isPlayer = useIsPlayer(playerNumber);
@@ -32,6 +35,9 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
   const possiblePositions = usePossiblePositions(playerNumber);
   const moveAgain = useMoveAgain(playerNumber);
   const beat = useBeat(playerNumber);
+
+  const difficultyLevel = useSelector(selectDifficulty);
+  const pieces = useSelector(selectPieces);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -48,8 +54,33 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
         })
         .filter((entry) => entry.position !== null);
       if (positionsPlayer.length !== 0) {
-        const rand = getRandomNumber(0, positionsPlayer.length - 1);
-        const entry = positionsPlayer[rand];
+        let entryIdx: number;
+
+        switch (difficultyLevel) {
+          case 'easy': {
+            const rand = getRandomNumber(0, positionsPlayer.length - 1);
+            entryIdx = rand;
+            break;
+          }
+          case 'normal': {
+            entryIdx = giveBestOption(
+              pieces,
+              positionsPlayer as {
+                position: Position;
+                pieceNumber: PieceNumber;
+              }[],
+              playerNumber,
+              'normal'
+            );
+            break;
+          }
+          case 'difficult': {
+            entryIdx = 0;
+            break;
+          }
+        }
+
+        const entry = positionsPlayer[entryIdx!];
         dispatch(
           setSelectedPiece([playerNumber, entry.pieceNumber as PieceNumber])
         );
@@ -79,5 +110,7 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
     moveAgain,
     rollOneMoreTime,
     beat,
+    difficultyLevel,
+    pieces,
   ]);
 }

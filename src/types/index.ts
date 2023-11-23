@@ -27,6 +27,7 @@ export interface Position {
 export type PlayerNumber = '1' | '2' | '3' | '4';
 export type PieceNumber = PlayerNumber;
 export type Color = 'red' | 'green' | 'yellow' | 'blue';
+export type Difficulty = 'easy' | 'normal' | 'difficult';
 
 export type NumberOfPlayers = 2 | 4;
 

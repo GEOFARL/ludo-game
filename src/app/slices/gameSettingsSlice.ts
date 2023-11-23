@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { Color, NumberOfPlayers } from '../../types';
+import { Color, Difficulty, NumberOfPlayers } from '../../types';
 
 export interface GameSettingsState {
   numberOfPlayers: NumberOfPlayers | null;
   playerColor: Color | null;
+  difficulty: Difficulty | null;
   isOver: boolean;
   winner: 'player' | 'bot' | null;
 }
@@ -13,6 +14,7 @@ export interface GameSettingsState {
 const initialState: GameSettingsState = {
   numberOfPlayers: null,
   playerColor: null,
+  difficulty: null,
   isOver: false,
   winner: null,
 };
@@ -33,11 +35,15 @@ export const gameSettingsSlice = createSlice({
     setWinner: (state, action: PayloadAction<'player' | 'bot' | null>) => {
       state.winner = action.payload;
     },
+    setDifficulty: (state, action: PayloadAction<Difficulty>) => {
+      state.difficulty = action.payload;
+    },
     resetGameSettings: (state) => {
       state.isOver = false;
       state.numberOfPlayers = null;
       state.playerColor = null;
       state.winner = null;
+      state.difficulty = null;
     },
   },
 });
@@ -47,6 +53,7 @@ export const {
   setPlayerColor,
   setIsOver,
   setWinner,
+  setDifficulty,
   resetGameSettings,
 } = gameSettingsSlice.actions;
 
@@ -59,6 +66,9 @@ export const selectPlayerColor = (state: RootState) =>
 export const selectGameSettings = (state: RootState) => state.gameSettings;
 
 export const selectIsGameOver = (state: RootState) => state.gameSettings.isOver;
+
+export const selectDifficulty = (state: RootState) =>
+  state.gameSettings.difficulty;
 
 export const selectWinner = (state: RootState) => state.gameSettings.winner;
 

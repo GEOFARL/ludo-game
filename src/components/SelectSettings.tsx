@@ -1,10 +1,11 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/store';
 import {
+  setDifficulty,
   setNumberOfPlayers,
   setPlayerColor,
 } from '../app/slices/gameSettingsSlice';
-import { Color, NumberOfPlayers } from '../types';
+import { Color, Difficulty, NumberOfPlayers } from '../types';
 
 const SelectSettings = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -118,6 +119,27 @@ const SelectSettings = () => {
           />
         </div>
       </div>
+
+      <div className="h-[2px] w-full bg-black my-6"></div>
+
+      <h3 className="text-5xl uppercase font-semibold text-center">
+        Difficulty
+      </h3>
+
+      <select
+        id="countries"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
+        onChange={(e) => {
+          if (e.target.value === 'null') return;
+
+          dispatch(setDifficulty(e.target.value as Difficulty));
+        }}
+      >
+        <option value="null">Choose Difficulty</option>
+        <option value="easy">Easy</option>
+        <option value="normal">Normal</option>
+        <option value="difficult">Difficult</option>
+      </select>
     </div>
   );
 };

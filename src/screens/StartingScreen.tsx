@@ -6,7 +6,8 @@ import { useState } from 'react';
 import useStartGame from '../hooks/useStartGame';
 
 const StartingScreen = () => {
-  const { numberOfPlayers, playerColor } = useSelector(selectGameSettings);
+  const { numberOfPlayers, playerColor, difficulty } =
+    useSelector(selectGameSettings);
   const startGame = useStartGame();
 
   const [pressed, setPressed] = useState(false);
@@ -15,9 +16,10 @@ const StartingScreen = () => {
       <Card additionalClassnames="p-10 flex flex-col justify-center gap-4">
         <SelectSettings />
 
-        {(!numberOfPlayers || !playerColor) && pressed && (
+        {(!numberOfPlayers || !playerColor || !difficulty) && pressed && (
           <p className="text-lg text-center text-red-600 font-semibold mt-3">
-            Select number of players and color
+            Select number of players, color and <br />
+            difficulty
           </p>
         )}
 
@@ -25,7 +27,7 @@ const StartingScreen = () => {
           className="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white py-2 text-xl rounded-md"
           onClick={() => {
             setPressed(true);
-            if (!numberOfPlayers || !playerColor) return;
+            if (!numberOfPlayers || !playerColor || !difficulty) return;
             startGame();
           }}
         >
