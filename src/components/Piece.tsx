@@ -47,7 +47,7 @@ const Piece = forwardRef<HTMLDivElement, PieceProps>(function (
   return (
     <div
       className={`absolute ${
-        isActive && isSelecting && isPossibleToMove !== null
+        isActive && isSelecting && isPossibleToMove !== null && isPlayer
           ? 'active-piece'
           : ''
       } w-[50px] h-[50px] transition-all ${isPlayer ? 'z-10' : ''}`}

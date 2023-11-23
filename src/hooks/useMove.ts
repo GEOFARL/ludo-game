@@ -6,9 +6,15 @@ import {
   selectSelectedPiece,
   setOutOfPlay,
   setPosition,
+  setRollOneMoreTime,
 } from '../app/slices/piecesSlice';
 import { AppDispatch } from '../app/store';
-import { moveActiveToNextOne } from '../app/slices/playersSlice';
+import {
+  moveActiveToNextOne,
+  setIsActive,
+  setIsSelecting,
+  setMoveAgain,
+} from '../app/slices/playersSlice';
 import { PlayerNumber, Screen } from '../types';
 import useIsActivePlayer from './useIsActivePlayer';
 import useIsPlayer from './useIsPlayer';
@@ -25,6 +31,8 @@ import {
 import usePiecesForPosition from './usePiecesForPosition';
 import useScore from './useScore';
 import { pause } from '../utils';
+import useMoveAgain from './useMoveAgain';
+import useRollOneMoreTime from './useRollOneMoreTime';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -37,6 +45,9 @@ export default function useMove(playerNumber: PlayerNumber) {
   const numberOutOfPlay = useNumberOutOfPlay(playerNumber);
   const score = useScore(playerNumber);
 
+  const moveAgain = useMoveAgain(playerNumber);
+  const rollOneMoreTime = useRollOneMoreTime();
+
   const findPiecesForPosition = usePiecesForPosition();
 
   useEffect(() => {
@@ -44,7 +55,7 @@ export default function useMove(playerNumber: PlayerNumber) {
       return;
     }
 
-    if (!selectedPiece || !isActive) {
+    if (!selectedPiece || !isActive || rollOneMoreTime) {
       return;
     }
 
@@ -133,7 +144,14 @@ export default function useMove(playerNumber: PlayerNumber) {
     dispatch(resetPossiblePositions());
 
     if (!moved) {
-      dispatch(moveActiveToNextOne(playerNumber));
+      if (moveAgain) {
+        dispatch(setIsActive([playerNumber, true]));
+        dispatch(setIsSelecting([playerNumber, false]));
+        dispatch(setMoveAgain([playerNumber, false]));
+        dispatch(setRollOneMoreTime(true));
+      } else {
+        dispatch(moveActiveToNextOne(playerNumber));
+      }
     }
   }, [
     selectedPiece,
@@ -146,5 +164,7 @@ export default function useMove(playerNumber: PlayerNumber) {
     numberOutOfPlay,
     findPiecesForPosition,
     score,
+    moveAgain,
+    rollOneMoreTime,
   ]);
 }

@@ -6,21 +6,34 @@ import usePossiblePositions from './usePossiblePositions';
 import { getRandomNumber } from '../utils';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/store';
-import { setSelectedPiece } from '../app/slices/piecesSlice';
+import {
+  setRollOneMoreTime,
+  setSelectedPiece,
+} from '../app/slices/piecesSlice';
 import useIsActivePlayer from './useIsActivePlayer';
-import { moveActiveToNextOne } from '../app/slices/playersSlice';
+import {
+  moveActiveToNextOne,
+  setIsActive,
+  setIsSelecting,
+  setMoveAgain,
+} from '../app/slices/playersSlice';
+import useMoveAgain from './useMoveAgain';
+import useRollOneMoreTime from './useRollOneMoreTime';
 
 export default function useBotSelect(playerNumber: PlayerNumber) {
   const isPlayer = useIsPlayer(playerNumber);
   const isSelecting = useIsSelecting(playerNumber);
   const isActive = useIsActivePlayer(playerNumber);
 
+  const rollOneMoreTime = useRollOneMoreTime();
+
   const possiblePositions = usePossiblePositions(playerNumber);
+  const moveAgain = useMoveAgain(playerNumber);
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (isPlayer || !isSelecting || !isActive) return;
+    if (isPlayer || !isSelecting || !isActive || rollOneMoreTime) return;
 
     if (isSelecting) {
       const positionsPlayer = possiblePositions
@@ -38,7 +51,14 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
           setSelectedPiece([playerNumber, entry.pieceNumber as PieceNumber])
         );
       } else {
-        dispatch(moveActiveToNextOne(playerNumber));
+        if (moveAgain) {
+          dispatch(setIsActive([playerNumber, true]));
+          dispatch(setIsSelecting([playerNumber, false]));
+          dispatch(setMoveAgain([playerNumber, false]));
+          dispatch(setRollOneMoreTime(true));
+        } else {
+          dispatch(moveActiveToNextOne(playerNumber));
+        }
       }
     }
   }, [
@@ -48,5 +68,7 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
     dispatch,
     playerNumber,
     isActive,
+    moveAgain,
+    rollOneMoreTime,
   ]);
 }

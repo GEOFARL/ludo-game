@@ -7,13 +7,21 @@ import {
   removeIsMoving,
   setIsMoving,
   setPreviousPosition,
+  setRollOneMoreTime,
 } from '../app/slices/piecesSlice';
 import { selectWidth } from '../app/slices/boardSlice';
 import getPath from '../utils/getPath';
 import { getCoordinates, pause } from '../utils';
 import { PIECE_MOVE_TIME } from '../constants';
-import { moveActiveToNextOne, setIsActive } from '../app/slices/playersSlice';
+import {
+  moveActiveToNextOne,
+  setIsActive,
+  setIsSelecting,
+  setMoveAgain,
+} from '../app/slices/playersSlice';
 import calculateSpawnPosition from '../utils/calculateSpawnPosition';
+import useMoveAgain from './useMoveAgain';
+import useRollOneMoreTime from './useRollOneMoreTime';
 
 export default function useDisplace(
   playerNumber: PlayerNumber,
@@ -30,6 +38,8 @@ export default function useDisplace(
     return piecesForPlayer.map((piece) => piece.isMoving);
   }, [piecesForPlayer]);
   const [firstRef, secondRef, thirdRef, fourthRef] = refs;
+  const moveAgain = useMoveAgain(playerNumber);
+  const rollOneMoreTime = useRollOneMoreTime();
 
   const dispatch = useDispatch<AppDispatch>();
   const width = useSelector(selectWidth);
@@ -44,6 +54,8 @@ export default function useDisplace(
     ) {
       return;
     }
+
+    if (rollOneMoreTime) return;
 
     positions.forEach(async (position, positionIdx) => {
       if (!position && !previousPositions[positionIdx]) return;
@@ -111,7 +123,14 @@ export default function useDisplace(
           await pause(PIECE_MOVE_TIME);
         }
         if (path.length > 0) {
-          dispatch(moveActiveToNextOne(playerNumber));
+          if (moveAgain) {
+            dispatch(setIsActive([playerNumber, true]));
+            dispatch(setIsSelecting([playerNumber, false]));
+            dispatch(setMoveAgain([playerNumber, false]));
+            dispatch(setRollOneMoreTime(true));
+          } else {
+            dispatch(moveActiveToNextOne(playerNumber));
+          }
         }
       };
 
@@ -159,5 +178,7 @@ export default function useDisplace(
     dispatch,
     width,
     arePiecesMoving,
+    moveAgain,
+    rollOneMoreTime,
   ]);
 }

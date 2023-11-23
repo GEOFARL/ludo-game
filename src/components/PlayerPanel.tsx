@@ -9,6 +9,14 @@ import { useEffect } from 'react';
 import useIsSelecting from '../hooks/useIsSelecting';
 
 import arrow from '../assets/arrow.png';
+import useRollOneMoreTime from '../hooks/useRollOneMoreTime';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../app/store';
+import {
+  selectSelectedPiece,
+  setRollOneMoreTime,
+} from '../app/slices/piecesSlice';
+import useMoveAgain from '../hooks/useMoveAgain';
 
 interface PlayerPanelProps {
   playerNumber: PlayerNumber;
@@ -22,6 +30,11 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
   const isRolling = useIsRolling(playerNumber);
   const isActive = useIsActivePlayer(playerNumber);
   const isSelecting = useIsSelecting(playerNumber);
+
+  const rollOneMoreTime = useRollOneMoreTime();
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedPiece = useSelector(selectSelectedPiece);
+  const moveAgain = useMoveAgain(playerNumber);
 
   const disabled = isRolling || !isActive || isSelecting;
 
@@ -48,11 +61,36 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
 
   useEffect(() => {
     (async () => {
-      if (isActive && !isPlayer && !isRolling && !isSelecting) {
+      if (
+        isActive &&
+        !isPlayer &&
+        !isRolling &&
+        !isSelecting &&
+        !rollOneMoreTime &&
+        !moveAgain
+      ) {
         await rollDice();
       }
     })();
-  }, [isActive, isPlayer, isRolling, isSelecting, rollDice]);
+  }, [
+    isActive,
+    isPlayer,
+    isRolling,
+    isSelecting,
+    rollDice,
+    rollOneMoreTime,
+    selectedPiece,
+    moveAgain,
+  ]);
+
+  useEffect(() => {
+    (async () => {
+      if (rollOneMoreTime && isActive && !isSelecting && !isRolling) {
+        dispatch(setRollOneMoreTime(false));
+        await rollDice();
+      }
+    })();
+  }, [rollOneMoreTime, rollDice, dispatch, isActive, isSelecting, isRolling]);
 
   return isPlaying ? (
     <div

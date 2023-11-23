@@ -5,6 +5,7 @@ export interface Player {
   isActive: boolean;
   isSelecting: boolean;
   score: number | null;
+  moveAgain: boolean;
 }
 
 export interface Piece {

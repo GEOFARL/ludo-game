@@ -5,6 +5,7 @@ import {
   moveActiveToNextOne,
   setIsRolling,
   setIsSelecting,
+  setMoveAgain,
   setScore,
 } from '../app/slices/playersSlice';
 import { PlayerNumber } from '../types';
@@ -13,6 +14,7 @@ import { ROLL_TIME } from '../constants';
 import useMove from './useMove';
 import useEvaluatePosition from './useEvaluatePosition';
 import useScore from './useScore';
+import { setRollOneMoreTime } from '../app/slices/piecesSlice';
 
 export default function useRollDice(playerNumber: PlayerNumber) {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,8 +34,15 @@ export default function useRollDice(playerNumber: PlayerNumber) {
 
         const arePossiblePositions = evaluatePosition(newScore);
 
+        if (newScore === 6) {
+          dispatch(setMoveAgain([playerNumber, true]));
+        }
+
         if (arePossiblePositions) {
           dispatch(setIsSelecting([playerNumber, true]));
+        } else if (!arePossiblePositions && newScore === 6) {
+          dispatch(setMoveAgain([playerNumber, false]));
+          dispatch(setRollOneMoreTime(true));
         } else if (!arePossiblePositions) {
           dispatch(moveActiveToNextOne(playerNumber));
         }

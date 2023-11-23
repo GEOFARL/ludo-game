@@ -6,10 +6,12 @@ import { Piece, PieceNumber, PlayerNumber, Position } from '../../types';
 interface boardState {
   pieces: Piece[];
   selectedPieceIndex: number | null;
+  rollOneMoreTime: boolean;
 }
 const initialState: boardState = {
   pieces: [],
   selectedPieceIndex: null,
+  rollOneMoreTime: false,
 };
 
 export const boardSlice = createSlice({
@@ -146,6 +148,10 @@ export const boardSlice = createSlice({
     resetPieces: (state) => {
       state.pieces = [];
       state.selectedPieceIndex = null;
+      state.rollOneMoreTime = false;
+    },
+    setRollOneMoreTime: (state, action: PayloadAction<boolean>) => {
+      state.rollOneMoreTime = action.payload;
     },
   },
 });
@@ -160,6 +166,7 @@ export const {
   setPreviousPosition,
   setOutOfPlay,
   setIsMoving,
+  setRollOneMoreTime,
   removeIsMoving,
   resetPieces,
 } = boardSlice.actions;
@@ -167,6 +174,10 @@ export const {
 export const selectPieces = createSelector(
   (state: RootState) => state.pieces,
   (pieces) => pieces.pieces
+);
+export const selectRollOneMoreTime = createSelector(
+  (state: RootState) => state.pieces,
+  (pieces) => pieces.rollOneMoreTime
 );
 export const selectPiecesForPlayer = createSelector(
   [selectPieces, (_: RootState, playerNumber: PlayerNumber) => playerNumber],
