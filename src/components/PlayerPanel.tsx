@@ -104,7 +104,7 @@ const PlayerPanel: React.FC<PlayerPanelProps> = ({ playerNumber }) => {
         <p>Score: {score}</p>
         {isPlayer && (
           <button
-            onClick={() => {
+            onClick={async () => {
               rollDice();
             }}
             className={`px-2 py-1  text-white rounded-sm transition-all duration-200 ${

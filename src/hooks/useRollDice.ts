@@ -9,12 +9,14 @@ import {
   setScore,
 } from '../app/slices/playersSlice';
 import { PlayerNumber } from '../types';
-import { getRandomNumber } from '../utils';
-import { ROLL_TIME } from '../constants';
+import { getRandomNumber, pause } from '../utils';
+import { PAUSE_AFTER_MOVE_ROLL_TIME, ROLL_TIME } from '../constants';
 import useMove from './useMove';
 import useEvaluatePosition from './useEvaluatePosition';
 import useScore from './useScore';
 import { setRollOneMoreTime } from '../app/slices/piecesSlice';
+import rollDiceSound from '../assets/dice-sound.mp3';
+import usePlaySounds from './usePlaySounds';
 
 export default function useRollDice(playerNumber: PlayerNumber) {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,8 +26,14 @@ export default function useRollDice(playerNumber: PlayerNumber) {
 
   useMove(playerNumber);
 
+  const playSounds = usePlaySounds();
+
   const rollDice = useCallback(async () => {
     dispatch(setIsRolling([playerNumber, true]));
+    await pause(PAUSE_AFTER_MOVE_ROLL_TIME);
+    if (playSounds) {
+      new Audio(rollDiceSound).play();
+    }
     return new Promise<void>((resolve) => {
       setTimeout(async () => {
         dispatch(setIsRolling([playerNumber, false]));
@@ -49,7 +57,7 @@ export default function useRollDice(playerNumber: PlayerNumber) {
         resolve();
       }, ROLL_TIME);
     });
-  }, [dispatch, playerNumber, evaluatePosition]);
+  }, [dispatch, playerNumber, evaluatePosition, playSounds]);
 
   return { score, rollDice };
 }

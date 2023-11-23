@@ -35,6 +35,12 @@ import { pause } from '../utils';
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
 import useBeat from './useBeat';
+import usePlaySounds from './usePlaySounds';
+
+import swooshSound from '../assets/swoosh-sound.mp3';
+import winSound from '../assets/win-sound.mp3';
+import winningSound from '../assets/winning-sound.wav';
+import loseSound from '../assets/lose-sound.wav';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -52,6 +58,8 @@ export default function useMove(playerNumber: PlayerNumber) {
   const beat = useBeat(playerNumber);
 
   const findPiecesForPosition = usePiecesForPosition();
+
+  const playSounds = usePlaySounds();
 
   useEffect(() => {
     if (possiblePositions.every((position) => position === null)) {
@@ -106,6 +114,9 @@ export default function useMove(playerNumber: PlayerNumber) {
               ) {
                 await pause(score! * PIECE_MOVE_TIME);
               }
+              if (playSounds) {
+                new Audio(swooshSound).play();
+              }
               dispatch(
                 setPosition([piece.playerNumber, piece.pieceNumber, null])
               );
@@ -137,13 +148,22 @@ export default function useMove(playerNumber: PlayerNumber) {
             piece.possiblePosition.y > 5 &&
             piece.possiblePosition.y < 9
           ) {
+            if (playSounds) {
+              new Audio(winSound).play();
+            }
             dispatch(setOutOfPlay([piece.playerNumber, piece.pieceNumber]));
             if (numberOutOfPlay === 3) {
               dispatch(setIsOver(true));
               dispatch(setScreen(Screen.GAME_OVER));
               if (isPlayer) {
+                if (playSounds) {
+                  new Audio(winningSound).play();
+                }
                 dispatch(setWinner('player'));
               } else {
+                if (playSounds) {
+                  new Audio(loseSound).play();
+                }
                 dispatch(setWinner('bot'));
               }
             }
@@ -184,5 +204,6 @@ export default function useMove(playerNumber: PlayerNumber) {
     moveAgain,
     rollOneMoreTime,
     beat,
+    playSounds,
   ]);
 }

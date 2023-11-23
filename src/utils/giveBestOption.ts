@@ -55,6 +55,7 @@ export default function giveBestOption(
         : getRandomNumber(0, possibleOptions.length - 1);
     }
     case 'difficult': {
+      console.log('here');
       const beatMap = Array(possibleOptions.length).fill(false);
       possibleOptions.forEach((option, index) => {
         const piecesForPosition = findPiecesForPosition(
@@ -80,6 +81,7 @@ export default function giveBestOption(
       });
 
       const beatPositionIdx = beatMap.findIndex((item) => item);
+      console.log('beat position', possibleOptions[beatPositionIdx]);
 
       if (beatPositionIdx !== -1) {
         return beatPositionIdx;

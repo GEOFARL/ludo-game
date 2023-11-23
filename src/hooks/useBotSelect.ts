@@ -75,7 +75,15 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
             break;
           }
           case 'difficult': {
-            entryIdx = 0;
+            entryIdx = giveBestOption(
+              pieces,
+              positionsPlayer as {
+                position: Position;
+                pieceNumber: PieceNumber;
+              }[],
+              playerNumber,
+              'difficult'
+            );
             break;
           }
         }

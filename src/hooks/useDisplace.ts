@@ -24,6 +24,9 @@ import calculateSpawnPosition from '../utils/calculateSpawnPosition';
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
 import useBeat from './useBeat';
+import usePlaySounds from './usePlaySounds';
+
+import moveSound from '../assets/move-sound.mp3';
 
 export default function useDisplace(
   playerNumber: PlayerNumber,
@@ -47,6 +50,8 @@ export default function useDisplace(
 
   const dispatch = useDispatch<AppDispatch>();
   const width = useSelector(selectWidth);
+
+  const playSounds = usePlaySounds();
 
   useEffect(() => {
     if (
@@ -124,6 +129,9 @@ export default function useDisplace(
           const [bottom, left] = getCoordinates(width, coordinate);
           ref.current!.style.bottom = `${bottom}px`;
           ref.current!.style.left = `${left}px`;
+          if (playSounds) {
+            new Audio(moveSound).play();
+          }
           await pause(PIECE_MOVE_TIME);
         }
         if (path.length > 0) {
@@ -190,5 +198,6 @@ export default function useDisplace(
     moveAgain,
     rollOneMoreTime,
     beat,
+    playSounds,
   ]);
 }

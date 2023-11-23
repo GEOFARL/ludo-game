@@ -9,6 +9,7 @@ export interface GameSettingsState {
   difficulty: Difficulty | null;
   isOver: boolean;
   winner: 'player' | 'bot' | null;
+  playSounds: boolean;
 }
 
 const initialState: GameSettingsState = {
@@ -17,6 +18,7 @@ const initialState: GameSettingsState = {
   difficulty: null,
   isOver: false,
   winner: null,
+  playSounds: false,
 };
 
 export const gameSettingsSlice = createSlice({
@@ -38,6 +40,9 @@ export const gameSettingsSlice = createSlice({
     setDifficulty: (state, action: PayloadAction<Difficulty>) => {
       state.difficulty = action.payload;
     },
+    setPlaySounds: (state, action: PayloadAction<boolean>) => {
+      state.playSounds = action.payload;
+    },
     resetGameSettings: (state) => {
       state.isOver = false;
       state.numberOfPlayers = null;
@@ -55,6 +60,7 @@ export const {
   setWinner,
   setDifficulty,
   resetGameSettings,
+  setPlaySounds,
 } = gameSettingsSlice.actions;
 
 export const selectNumberOfPlayers = (state: RootState) =>
@@ -71,5 +77,8 @@ export const selectDifficulty = (state: RootState) =>
   state.gameSettings.difficulty;
 
 export const selectWinner = (state: RootState) => state.gameSettings.winner;
+
+export const selectPlaySounds = (state: RootState) =>
+  state.gameSettings.playSounds;
 
 export default gameSettingsSlice.reducer;
