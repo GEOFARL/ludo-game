@@ -15,6 +15,7 @@ import { getCoordinates, pause } from '../utils';
 import { PIECE_MOVE_TIME } from '../constants';
 import {
   moveActiveToNextOne,
+  setBeat,
   setIsActive,
   setIsSelecting,
   setMoveAgain,
@@ -22,6 +23,7 @@ import {
 import calculateSpawnPosition from '../utils/calculateSpawnPosition';
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
+import useBeat from './useBeat';
 
 export default function useDisplace(
   playerNumber: PlayerNumber,
@@ -38,8 +40,10 @@ export default function useDisplace(
     return piecesForPlayer.map((piece) => piece.isMoving);
   }, [piecesForPlayer]);
   const [firstRef, secondRef, thirdRef, fourthRef] = refs;
+
   const moveAgain = useMoveAgain(playerNumber);
   const rollOneMoreTime = useRollOneMoreTime();
+  const beat = useBeat(playerNumber);
 
   const dispatch = useDispatch<AppDispatch>();
   const width = useSelector(selectWidth);
@@ -128,6 +132,11 @@ export default function useDisplace(
             dispatch(setIsSelecting([playerNumber, false]));
             dispatch(setMoveAgain([playerNumber, false]));
             dispatch(setRollOneMoreTime(true));
+          } else if (beat) {
+            dispatch(setIsActive([playerNumber, true]));
+            dispatch(setIsSelecting([playerNumber, false]));
+            dispatch(setBeat([playerNumber, false]));
+            dispatch(setRollOneMoreTime(true));
           } else {
             dispatch(moveActiveToNextOne(playerNumber));
           }
@@ -180,5 +189,6 @@ export default function useDisplace(
     arePiecesMoving,
     moveAgain,
     rollOneMoreTime,
+    beat,
   ]);
 }

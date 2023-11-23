@@ -11,6 +11,7 @@ import {
 import { AppDispatch } from '../app/store';
 import {
   moveActiveToNextOne,
+  setBeat,
   setIsActive,
   setIsSelecting,
   setMoveAgain,
@@ -33,6 +34,7 @@ import useScore from './useScore';
 import { pause } from '../utils';
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
+import useBeat from './useBeat';
 
 export default function useMove(playerNumber: PlayerNumber) {
   const selectedPiece = useSelector(selectSelectedPiece);
@@ -47,6 +49,7 @@ export default function useMove(playerNumber: PlayerNumber) {
 
   const moveAgain = useMoveAgain(playerNumber);
   const rollOneMoreTime = useRollOneMoreTime();
+  const beat = useBeat(playerNumber);
 
   const findPiecesForPosition = usePiecesForPosition();
 
@@ -78,6 +81,15 @@ export default function useMove(playerNumber: PlayerNumber) {
 
           piecesForPosition.forEach((piece) => {
             playersPiecesCount[piece.playerNumber] += 1;
+          });
+
+          piecesForPosition.forEach((piece) => {
+            if (
+              piece.playerNumber !== playerNumber &&
+              playersPiecesCount[piece.playerNumber] < 2
+            ) {
+              dispatch(setBeat([playerNumber, true]));
+            }
           });
 
           piecesForPosition.forEach(async (piece) => {
@@ -149,6 +161,11 @@ export default function useMove(playerNumber: PlayerNumber) {
         dispatch(setIsSelecting([playerNumber, false]));
         dispatch(setMoveAgain([playerNumber, false]));
         dispatch(setRollOneMoreTime(true));
+      } else if (beat) {
+        dispatch(setIsActive([playerNumber, true]));
+        dispatch(setIsSelecting([playerNumber, false]));
+        dispatch(setBeat([playerNumber, false]));
+        dispatch(setRollOneMoreTime(true));
       } else {
         dispatch(moveActiveToNextOne(playerNumber));
       }
@@ -166,5 +183,6 @@ export default function useMove(playerNumber: PlayerNumber) {
     score,
     moveAgain,
     rollOneMoreTime,
+    beat,
   ]);
 }

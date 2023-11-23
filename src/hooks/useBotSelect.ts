@@ -13,12 +13,14 @@ import {
 import useIsActivePlayer from './useIsActivePlayer';
 import {
   moveActiveToNextOne,
+  setBeat,
   setIsActive,
   setIsSelecting,
   setMoveAgain,
 } from '../app/slices/playersSlice';
 import useMoveAgain from './useMoveAgain';
 import useRollOneMoreTime from './useRollOneMoreTime';
+import useBeat from './useBeat';
 
 export default function useBotSelect(playerNumber: PlayerNumber) {
   const isPlayer = useIsPlayer(playerNumber);
@@ -29,6 +31,7 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
 
   const possiblePositions = usePossiblePositions(playerNumber);
   const moveAgain = useMoveAgain(playerNumber);
+  const beat = useBeat(playerNumber);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -56,6 +59,11 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
           dispatch(setIsSelecting([playerNumber, false]));
           dispatch(setMoveAgain([playerNumber, false]));
           dispatch(setRollOneMoreTime(true));
+        } else if (beat) {
+          dispatch(setIsActive([playerNumber, true]));
+          dispatch(setIsSelecting([playerNumber, false]));
+          dispatch(setBeat([playerNumber, false]));
+          dispatch(setRollOneMoreTime(true));
         } else {
           dispatch(moveActiveToNextOne(playerNumber));
         }
@@ -70,5 +78,6 @@ export default function useBotSelect(playerNumber: PlayerNumber) {
     isActive,
     moveAgain,
     rollOneMoreTime,
+    beat,
   ]);
 }
