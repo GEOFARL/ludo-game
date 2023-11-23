@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# Ludo Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Live Demo](https://655f65c5e2e9a4160d980240--monumental-cannoli-3af0f6.netlify.app/)
 
-Currently, two official plugins are available:
+## Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Implementation of a strategic board game Ludo
 
-## Expanding the ESLint configuration
+In this game you can play in two or four players, till the first one moves all of them pieces to the center of the board
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Rules:
 
-- Configure the top-level `parserOptions` property like this:
+- wins a player who moves all 4 pieces to the center first
+- To move a piece out of a spawn you should hit a "6" dice roll
+- If a player gets '6' points, it rolls one more time, if a player beats another player's piece he moves one more time
+- You can beat a piece only if it is single inside of the cell, if there are more than one piece, you cannot beat them
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Demonstration
+
+![demonstration](./src/assets/demonstration.gif)
+
+## Run Locally
+
+Clone this repo and run following commands
+
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+npm install
+npm run dev
+```
